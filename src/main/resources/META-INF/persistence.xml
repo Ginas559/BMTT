@@ -59,8 +59,6 @@ https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
 				value="${DB_USER}" />
 			<property name="jakarta.persistence.jdbc.password"
 				value="${DB_PASS}" />
-			<property name="jakarta.persistence.jdbc.driver"
-				value="org.postgresql.Driver" />
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.PostgreSQLDialect" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
