@@ -16,7 +16,10 @@ public class JPAConfig {
         try {
             // 1. Load biến môi trường từ file .env (hoặc từ môi trường hệ thống)
             // Đảm bảo file .env của bạn được cấu hình đúng để thư viện tìm thấy
-            Dotenv dotenv = Dotenv.load(); 
+        	Dotenv dotenv = Dotenv.configure()
+                    .directory("/") // Tìm kiếm từ gốc Classpath (nơi .env đang ở)
+                    .filename(".env") // Tên file
+                    .load();
 
             // 2. Tạo Map chứa các thuộc tính kết nối database
             Map<String, Object> properties = new HashMap<>();
