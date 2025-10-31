@@ -235,9 +235,11 @@
 					<c:url var="attrUrl" value="/vendor/attribute">
 						<c:param name="productId" value="${it.productId}" />
 					</c:url>
+					<%-- 
 					<c:url var="saleUrl" value="/vendor/sales/new">
 						<c:param name="productId" value="${it.productId}" />
 					</c:url>
+					--%>
 
 
 					<div class="col product-card-animation">
@@ -270,39 +272,14 @@
 
 									<div
 										class="d-flex justify-content-between mt-2 align-items-center">
+										
+										<%-- ===== KHỐI GIÁ ĐÃ SỬA (CHỈ HIỆN GIÁ GỐC) ===== --%>
 										<div>
-											<c:choose>
-												<%-- Có khuyến mãi: show giá đã giảm + giá gạch + badge -X% --%>
-												<c:when test="${not empty discountedPrice[it.productId]}">
-													<span class="fw-bold text-danger"> <fmt:formatNumber
-															value="${discountedPrice[it.productId]}" type="number"
-															groupingUsed="true" /> ₫
-													</span>
-													<small class="text-muted text-decoration-line-through ms-1">
-														<fmt:formatNumber value="${it.price}" type="number"
-															groupingUsed="true" /> ₫
-													</small>
-													<span
-														class="badge bg-danger-subtle text-danger-emphasis ms-1">
-														-<fmt:formatNumber value="${salePercent[it.productId]}"
-															type="number" maxFractionDigits="0" />%
-													</span>
-													<c:if test="${not empty saleEndDate[it.productId]}">
-														<div class="small text-muted mt-1">
-															Đến:
-															<c:out value="${saleEndDate[it.productId]}" /> <%-- ĐÃ SỬA LỖI TẠI ĐÂY --%>
-														</div>
-													</c:if>
-												</c:when>
-
-												<%-- Không có khuyến mãi: giữ như cũ --%>
-												<c:otherwise>
-													<span class="fw-bold text-danger"> <fmt:formatNumber
-															value="${it.price}" type="currency" currencySymbol="₫" />
-													</span>
-												</c:otherwise>
-											</c:choose>
+											<span class="fw-bold text-danger"> <fmt:formatNumber
+													value="${it.price}" type="currency" currencySymbol="₫" />
+											</span>
 										</div>
+										<%-- ===== KẾT THÚC KHỐI GIÁ ĐÃ SỬA ===== --%>
 
 
 										<span
@@ -324,8 +301,10 @@
 										<a class="btn btn-sm btn-outline-warning"
 											href="${variantsUrl}">Biến thể</a> <a
 											class="btn btn-sm btn-outline-secondary" href="${attrUrl}">Thuộc
-											tính</a> <a class="btn btn-sm btn-outline-success"
-											href="${saleUrl}"> Khuyến mãi </a>
+											tính</a> 
+										<%-- 
+										<a class="btn btn-sm btn-outline-success" href="${saleUrl}"> Khuyến mãi </a>
+										--%>
 
 
 										<button type="button"
@@ -386,8 +365,9 @@
 							</li>
 						</c:forEach>
 
-						<li class="page-item ${cur >= totalPages ? 'disabled' : ''}">
-							<a class="page-link"
+						<li
+							class="page-item ${cur >= totalPages ? 'disabled' : ''}"><a
+							class="page-link"
 							href="<c:url value='/vendor/products'>
                          <c:param name='page' value='${cur+1}'/>
                          <c:param name='size' value='${size}'/>
@@ -410,88 +390,3 @@
 		</div>
 	</div>
 </div>
-
-<style>
-/* Không cho overlay hiệu ứng bắt chuột */
-.card-3d-hover::before, .card-3d-hover::after {
-	pointer-events: none !important;
-}
-
-/* Ảnh không che phần footer */
-.product-card-img.cover {
-	position: relative;
-	z-index: 1;
-	display: block;
-}
-
-/* Đảm bảo footer & các nút ở trên overlay */
-.vendor-card .product-actions-footer, .vendor-card .product-actions-footer .product-actions-grid,
-	.vendor-card .card-footer a, .vendor-card .card-footer button {
-	position: relative;
-	z-index: 3;
-	pointer-events: auto;
-}
-
-/* Hạ mọi lớp phủ tổng thể của card nếu có */
-.card-3d-hover, .vendor-card {
-	position: relative;
-	z-index: 1;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const $$ = (q, el = document) => Array.from(el.querySelectorAll(q));
-
-  $$('.btn-toggle').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const id = btn.dataset.id;
-      if (!id) return;
-      try {
-        const res = await fetch('<c:url value="/vendor/products/toggle"/>', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-          },
-          body: new URLSearchParams({ id })
-        });
-
-        if (!res.ok) {
-          alert('Lỗi kết nối');
-          return;
-        }
-
-        const data = await res.json();
-        if (!data || !data.ok) {
-          alert((data && data.message) || 'Lỗi thao tác');
-          return;
-        }
-
-        // Cập nhật UI không reload
-        const card = btn.closest('.vendor-card');
-        if (!card) return;
-
-        // Badge trạng thái
-        const badge = card.querySelector('.status-badge');
-        if (badge) {
-          badge.textContent = data.status;
-          badge.classList.remove('bg-success', 'bg-secondary');
-          badge.classList.add(data.status === 'ACTIVE' ? 'bg-success' : 'bg-secondary');
-        }
-
-        // Nút toggle
-        btn.classList.remove('btn-outline-danger', 'btn-outline-success');
-        if (data.status === 'ACTIVE') {
-          btn.classList.add('btn-outline-danger');
-          btn.textContent = 'Ẩn';
-        } else {
-          btn.classList.add('btn-outline-success');
-          btn.textContent = 'Hiện';
-        }
-      } catch (e) {
-        alert('Lỗi kết nối');
-      }
-    });
-  });
-});
-</script>

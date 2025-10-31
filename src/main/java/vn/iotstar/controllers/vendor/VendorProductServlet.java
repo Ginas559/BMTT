@@ -19,7 +19,7 @@ import vn.iotstar.entities.Shop;
 import vn.iotstar.entities.User;
 import vn.iotstar.services.CategoryService;
 import vn.iotstar.services.ProductImageService;
-import vn.iotstar.services.ProductSaleService;
+// import vn.iotstar.services.ProductSaleService; // <-- ĐÃ COMMENT
 import vn.iotstar.services.ProductService;
 import vn.iotstar.services.StatisticService;
 import vn.iotstar.utils.SessionUtil;
@@ -34,7 +34,7 @@ public class VendorProductServlet extends HttpServlet {
     private final ProductImageService productImageService = new ProductImageService();
     private final StatisticService helper = new StatisticService();
     private final ProductVariantService variantService = new ProductVariantService();
-    private final ProductSaleService saleService = new vn.iotstar.services.ProductSaleService();
+    // private final ProductSaleService saleService = new vn.iotstar.services.ProductSaleService(); // <-- ĐÃ COMMENT
 
     
     /**
@@ -147,6 +147,7 @@ public class VendorProductServlet extends HttpServlet {
             req.setAttribute("stocks", stocks);
 
             // ====== NEW: Map khuyến mãi đang hiệu lực + giá đã giảm ======
+            /* <-- BẮT ĐẦU COMMENT
             // Thu thập productIds trong trang hiện tại
             List<Long> pids = new ArrayList<>();
             for (Product p : pr.items) pids.add(p.getProductId());
@@ -178,7 +179,7 @@ public class VendorProductServlet extends HttpServlet {
             req.setAttribute("salePercent", salePercent);
             req.setAttribute("saleEndDate", saleEndDate);
             req.setAttribute("discountedPrice", discountedPrice);
-            // ====== /NEW ======
+            */ // ====== /NEW ======  <-- KẾT THÚC COMMENT
 
             req.getRequestDispatcher("/WEB-INF/views/vendor/products.jsp").forward(req, resp);
             return;
