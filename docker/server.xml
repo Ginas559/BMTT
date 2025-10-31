@@ -2,7 +2,9 @@
 <Server port="-1" shutdown="SHUTDOWN">
   <Service name="Catalina">
     <Connector
-      port="${env.PORT}"  protocol="HTTP/1.1"
+      port="${PORT}"
+      address="0.0.0.0"
+      protocol="HTTP/1.1"
       connectionTimeout="20000"
       redirectPort="8443"
       URIEncoding="UTF-8" />

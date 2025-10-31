@@ -6,13 +6,17 @@ COPY src ./src
 RUN mvn -B -DskipTests clean package
 
 FROM tomcat:10.1-jdk21-temurin
+
+# Xoá apps mặc định
 RUN rm -rf /usr/local/tomcat/webapps/*
 
+# Copy cấu hình & start script
 COPY docker/server.xml /usr/local/tomcat/conf/server.xml
 COPY docker/start.sh /start.sh
-RUN chmod +x /start.sh # Cấp quyền thực thi cho start script
+RUN chmod +x /start.sh
 
+# Deploy WAR thành ROOT.war
 COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 
-EXPOSE 8080 
-CMD /start.sh
+EXPOSE 8080
+CMD ["/start.sh"]
