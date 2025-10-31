@@ -27,7 +27,7 @@ https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
 		<class>vn.iotstar.entities.ShippingPartner</class>
 		<class>vn.iotstar.entities.Shop</class>
 		<class>vn.iotstar.entities.ShopFeaturedImage</class>
-		
+
 		<class>vn.iotstar.entities.User</class>
 		<class>vn.iotstar.entities.UserOtp</class>
 		<class>vn.iotstar.entities.UserVerification</class>
@@ -38,7 +38,7 @@ https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
 
 		<class>vn.iotstar.entities.ViewedProduct</class>
 		<class>vn.iotstar.entities.Favorite</class>
-		
+
 		<class>vn.iotstar.entities.ProductComment</class>
 		<class>vn.iotstar.entities.ProductReview</class>
 		<class>vn.iotstar.entities.ProductReviewImage</class>
@@ -54,16 +54,18 @@ https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
 
 		<properties>
 			<property name="jakarta.persistence.jdbc.url"
-				value="jdbc:sqlserver://localhost:1433;databaseName=shoesshop;encrypt=true;trustServerCertificate=true;" />
+				value="${DB_URL}" />
+			<property name="jakarta.persistence.jdbc.user"
+				value="${DB_USER}" />
+			<property name="jakarta.persistence.jdbc.password"
+				value="${DB_PASS}" />
 			<property name="jakarta.persistence.jdbc.driver"
-				value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
-			<property name="jakarta.persistence.jdbc.user" value="sa" />
-			<property name="jakarta.persistence.jdbc.password" value="123456" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-			<property name="hibernate.hbm2ddl.auto" value="update" />
+				value="org.postgresql.Driver" />
 			<property name="hibernate.dialect"
-				value="org.hibernate.dialect.SQLServer2012Dialect" />
+				value="org.hibernate.dialect.PostgreSQLDialect" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+			<property name="hibernate.show_sql" value="false" />
+			<property name="hibernate.format_sql" value="true" />
 		</properties>
 	</persistence-unit>
 </persistence>
