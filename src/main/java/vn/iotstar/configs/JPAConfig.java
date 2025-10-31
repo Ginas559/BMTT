@@ -24,7 +24,8 @@ public class JPAConfig {
           .ignoreIfMissing()
           .load();
 
-      // 1) Resolve URL/USER/PASS từ nhiều key phổ biến
+      // ... (toàn bộ code trong khối static giữ nguyên)
+      // 1) Resolve URL/USER/PASS...
       String url  = firstNonEmpty(
           env("DB_URL"), dot(dotenv, "DB_URL"),
           env("SPRING_DATASOURCE_URL"), dot(dotenv, "SPRING_DATASOURCE_URL"),
@@ -45,7 +46,7 @@ public class JPAConfig {
           System.getProperty("DB_PASS")
       );
 
-      // 2) Các option Hibernate
+      // 2) Các option Hibernate...
       String dialect = firstNonEmpty(
           env("HIBERNATE_DIALECT"), dot(dotenv, "HIBERNATE_DIALECT"),
           "org.hibernate.dialect.PostgreSQLDialect"
@@ -65,7 +66,7 @@ public class JPAConfig {
           "true"
       );
 
-      // 3) Log kiểm tra key có mặt (không lộ giá trị)
+      // 3) Log kiểm tra key...
       presence("DB_URL","SPRING_DATASOURCE_URL","JDBC_DATABASE_URL","DATABASE_URL");
       presence("DB_USER","SPRING_DATASOURCE_USERNAME","JDBC_DATABASE_USERNAME");
       presence("DB_PASS","SPRING_DATASOURCE_PASSWORD","JDBC_DATABASE_PASSWORD");
@@ -80,7 +81,7 @@ public class JPAConfig {
         );
       }
 
-      // 4) (Rất quan trọng) Load driver & test kết nối ngắn để lỗi hiện ra rõ
+      // 4) Load driver & test kết nối...
       try {
         // Postgres driver; nếu bạn dùng DB khác, đổi tên class tương ứng
         Class.forName("org.postgresql.Driver");
@@ -124,7 +125,16 @@ public class JPAConfig {
     return emf.createEntityManager();
   }
 
+  /**
+   * // <-- THÊM VÀO
+   * Lấy EntityManagerFactory (cần cho B2)
+   */ // <-- THÊM VÀO
+  public static EntityManagerFactory getEntityManagerFactory() { // <-- THÊM VÀO
+    return emf; // <-- THÊM VÀO
+  }
+
   // ===== Helpers =====
+  // ... (toàn bộ helper functions giữ nguyên)
   private static String env(String k){ try{ String v=System.getenv(k); return isBlank(v)?null:v.trim(); }catch(Throwable t){return null;}}
   private static String dot(Dotenv d,String k){ try{ if(d==null)return null; String v=d.get(k); return isBlank(v)?null:v.trim(); }catch(Throwable t){return null;}}
   private static String firstNonEmpty(String... xs){ if(xs==null)return null; for(String s:xs){ if(!isBlank(s)) return s; } return null; }

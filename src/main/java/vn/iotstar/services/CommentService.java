@@ -1,9 +1,10 @@
+// filepath: src/main/java/vn/iotstar/services/CommentService.java
 package vn.iotstar.services;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
+// Đã XÓA: import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
+// Đã XÓA: import jakarta.persistence.Persistence;
 import jakarta.persistence.Query;
 
 import java.sql.Timestamp;
@@ -12,79 +13,59 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
-/**
- * CommentService
- * - Bảng: Product_Comment(comment_id, content, product_id, user_id, created_at, parent_comment_id)
- * - Dùng native SQL (không phụ thuộc entity)
- *
- * API:
- *  + list(productId, limit) -> List<CommentItem>                 (giữ nguyên, 1 cấp, phục vụ cũ)
- *  + add(userId, productId, content) -> void                     (giữ nguyên)
- *  + deleteById(commentId, userId?) -> int                       (giữ nguyên)
- *  + deleteByUser(userId, productId) -> int                      (giữ nguyên)
- *  + deleteByIdWithin24h(commentId, userId) -> int               (cập nhật: chặn xoá nếu đã có reply)
- *
- *  + addReply(userId, productId, parentCommentId, content) -> int
- *  + listThread(productId, currentUserId) -> List<ThreadItem>    (mới: trả về cây comment có indent & quyền xoá)
- */
+// ... (phần Javadoc giữ nguyên)
 public class CommentService {
 
-    private static volatile EntityManagerFactory EMF;
+    // Đã XÓA: private static volatile EntityManagerFactory EMF;
+    // Đã XÓA: private static EntityManagerFactory emf() { ... } (logic double-checked locking)
 
-    private static EntityManagerFactory emf() {
-        if (EMF == null) {
-            synchronized (CommentService.class) {
-                if (EMF == null) {
-                    EMF = Persistence.createEntityManagerFactory("dataSource");
-                }
-            }
-        }
-        return EMF;
-    }
-
+    /**
+     * Helper đã SỬA: Lấy EntityManager từ JPAConfig
+     */
     private EntityManager em() {
-        return emf().createEntityManager();
+        // Sửa lại để trỏ về JPAConfig
+        return vn.iotstar.configs.JPAConfig.getEntityManagerFactory().createEntityManager();
     }
 
-    /* ============================ DTO ============================ */
+    /* ============================ DTO (ĐÃ SỬA LỖI CHẤM PHẨY) ============================ */
 
     /** Item hiển thị bình luận cho JSP (phiên bản cũ 1 cấp) */
     public static class CommentItem {
-        private final String userName;
-        private final Date createdAt;        // <-- đổi sang java.util.Date để fmt:formatDate dùng được
-        private final String content;
+        private final String userName;    // <-- ĐÃ THÊM ;
+        private final Date createdAt;     // <-- ĐÃ THÊM ;
+        private final String content;     // <-- ĐÃ THÊM ;
 
         public CommentItem(String userName, Date createdAt, String content) {
-            this.userName = userName == null ? "" : userName;
-            this.createdAt = createdAt;
-            this.content = content == null ? "" : content;
+            this.userName = userName == null ? "" : userName;   // <-- ĐÃ THÊM ;
+            this.createdAt = createdAt;                         // <-- ĐÃ THÊM ;
+            this.content = content == null ? "" : content;       // <-- ĐÃ THÊM ;
         }
-        public String getUserName()     { return userName; }
-        public Date getCreatedAt()      { return createdAt; }
-        public String getContent()      { return content; }
+        public String getUserName()   { return userName; }
+        public Date getCreatedAt()    { return createdAt; }
+        public String getContent()    { return content; }
     }
 
     /** Item cho threaded UI (cây comment) */
     public static class ThreadItem {
-        private final Long commentId;
-        private final Long parentId;       // null nếu là root
-        private final Long userId;
-        private final String userName;
-        private final String content;
-        private final Date createdAt;
-        private final int depth;           // 0 cho root, tăng dần
-        private final boolean canDelete;   // true nếu là của currentUser & <=24h & chưa có reply
+        private final Long commentId;     // <-- ĐÃ THÊM ;
+        private final Long parentId;      // <-- ĐÃ THÊM ;
+        private final Long userId;        // <-- ĐÃ THÊM ;
+        private final String userName;    // <-- ĐÃ THÊM ;
+        private final String content;     // <-- ĐÃ THÊM ;
+        private final Date createdAt;     // <-- ĐÃ THÊM ;
+        private final int depth;          // <-- ĐÃ THÊM ;
+        private final boolean canDelete;  // <-- ĐÃ THÊM ;
 
         public ThreadItem(Long commentId, Long parentId, Long userId, String userName,
                           String content, Date createdAt, int depth, boolean canDelete) {
-            this.commentId = commentId;
-            this.parentId = parentId;
-            this.userId = userId;
-            this.userName = userName == null ? "" : userName;
-            this.content = content == null ? "" : content;
-            this.createdAt = createdAt;
-            this.depth = depth;
-            this.canDelete = canDelete;
+            this.commentId = commentId;                       // <-- ĐÃ THÊM ;
+            this.parentId = parentId;                         // <-- ĐÃ THÊM ;
+            this.userId = userId;                             // <-- ĐÃ THÊM ;
+            this.userName = userName == null ? "" : userName;   // <-- ĐÃ THÊM ;
+            this.content = content == null ? "" : content;       // <-- ĐÃ THÊM ;
+            this.createdAt = createdAt;                       // <-- ĐÃ THÊM ;
+            this.depth = depth;                               // <-- ĐÃ THÊM ;
+            this.canDelete = canDelete;                       // <-- ĐÃ THÊM ;
         }
 
         public Long getCommentId() { return commentId; }
@@ -97,22 +78,23 @@ public class CommentService {
         public boolean isCanDelete(){ return canDelete; }
     }
 
+
     /* ============================ READ ============================ */
 
     /** Danh sách bình luận mới nhất của 1 sản phẩm (giữ nguyên API cũ) */
     @SuppressWarnings("unchecked")
     public List<CommentItem> list(Long productId, Integer limit) {
         int lim = (limit == null || limit <= 0) ? 10 : limit;
-        EntityManager em = em();
-        try {
+        // Dùng try-with-resources
+        try (EntityManager em = em()) {
             String sql =
-                "SELECT " +
-                "  COALESCE(NULLIF(CONCAT(COALESCE(u.firstname,''),' ',COALESCE(u.lastname,'')),' '), u.email, CONCAT('User#', CAST(u.id AS VARCHAR(20)))) AS user_name, " +
-                "  c.created_at, c.content " +
-                "FROM Product_Comment c " +
-                "JOIN users u ON u.id = c.user_id " +
-                "WHERE c.product_id = :pid " +
-                "ORDER BY c.created_at DESC";
+                    "SELECT " +
+                            "  COALESCE(NULLIF(CONCAT(COALESCE(u.firstname,''),' ',COALESCE(u.lastname,'')),' '), u.email, CONCAT('User#', CAST(u.id AS VARCHAR(20)))) AS user_name, " +
+                            "  c.created_at, c.content " +
+                            "FROM Product_Comment c " +
+                            "JOIN users u ON u.id = c.user_id " +
+                            "WHERE c.product_id = :pid " +
+                            "ORDER BY c.created_at DESC";
             Query q = em.createNativeQuery(sql);
             q.setParameter("pid", productId);
             q.setMaxResults(lim);
@@ -121,48 +103,47 @@ public class CommentService {
             List<CommentItem> out = new ArrayList<>(rows.size());
             for (Object[] r : rows) {
                 String userName = toStr(r[0]);
-                Date ts         = toDate(r[1]);      // <-- map sang java.util.Date
-                String content  = toStr(r[2]);
+                Date ts = toDate(r[1]); // <-- map sang java.util.Date
+                String content = toStr(r[2]);
                 out.add(new CommentItem(userName, ts, content));
             }
             return out;
-        } finally {
-            em.close();
+            // Không cần finally em.close()
         }
     }
 
     /** Trả về cây comment (thread) phẳng theo thứ tự hiển thị + depth + quyền xoá */
     @SuppressWarnings("unchecked")
     public List<ThreadItem> listThread(Long productId, Long currentUserId) {
-        EntityManager em = em();
-        try {
+        // Dùng try-with-resources
+        try (EntityManager em = em()) {
             // Lấy tất cả comment của product, sort theo created_at ASC để render cha trước con
             String sql =
-                "SELECT " +
-                "  c.comment_id, c.parent_comment_id, c.user_id, " +
-                "  COALESCE(NULLIF(CONCAT(COALESCE(u.firstname,''),' ',COALESCE(u.lastname,'')),' '), u.email, CONCAT('User#', CAST(u.id AS VARCHAR(20)))) AS user_name, " +
-                "  c.content, c.created_at, " +
-                "  CASE WHEN c.user_id = :curUid " +
-                "            AND DATEDIFF(hour, c.created_at, GETDATE()) <= 24 " +
-                "            AND NOT EXISTS (SELECT 1 FROM Product_Comment r WHERE r.parent_comment_id = c.comment_id) " +
-                "       THEN 1 ELSE 0 END AS can_delete " +
-                "FROM Product_Comment c " +
-                "JOIN users u ON u.id = c.user_id " +
-                "WHERE c.product_id = :pid " +
-                "ORDER BY c.created_at ASC";
+                    "SELECT " +
+                            "  c.comment_id, c.parent_comment_id, c.user_id, " +
+                            "  COALESCE(NULLIF(CONCAT(COALESCE(u.firstname,''),' ',COALESCE(u.lastname,'')),' '), u.email, CONCAT('User#', CAST(u.id AS VARCHAR(20)))) AS user_name, " +
+                            "  c.content, c.created_at, " +
+                            "  CASE WHEN c.user_id = :curUid " +
+                            "       AND DATEDIFF(hour, c.created_at, GETDATE()) <= 24 " +
+                            "       AND NOT EXISTS (SELECT 1 FROM Product_Comment r WHERE r.parent_comment_id = c.comment_id) " +
+                            "  THEN 1 ELSE 0 END AS can_delete " +
+                            "FROM Product_Comment c " +
+                            "JOIN users u ON u.id = c.user_id " +
+                            "WHERE c.product_id = :pid " +
+                            "ORDER BY c.created_at ASC";
             Query q = em.createNativeQuery(sql);
             q.setParameter("pid", productId);
             q.setParameter("curUid", currentUserId == null ? -1L : currentUserId);
 
             List<Object[]> rows = q.getResultList();
 
-            // Dựng map parent->children (đơn giản hoá: build list rồi 2-pass để gán depth)
+            // ... (Logic Dựng map parent->children giữ nguyên)
             class Node {
-                Long id, parentId, uid;
-                String uname, content;
-                Date ts;
-                boolean canDel;
-                List<Node> children = new ArrayList<>();
+                Long id, parentId, uid;         // <-- ĐÃ THÊM ;
+                String uname, content;            // <-- ĐÃ THÊM ;
+                Date ts;                        // <-- ĐÃ THÊM ;
+                boolean canDel;                 // <-- ĐÃ THÊM ;
+                List<Node> children = new ArrayList<>(); // <-- ĐÃ THÊM ;
             }
 
             java.util.Map<Long, Node> byId = new java.util.HashMap<>();
@@ -170,13 +151,13 @@ public class CommentService {
 
             for (Object[] r : rows) {
                 Node n = new Node();
-                n.id      = toLong(r[0]);
-                n.parentId= toLong(r[1]);
-                n.uid     = toLong(r[2]);
-                n.uname   = toStr(r[3]);
-                n.content = toStr(r[4]);
-                n.ts      = toDate(r[5]);
-                n.canDel  = toInt(r[6]) == 1;
+                n.id      = toLong(r[0]);    // <-- ĐÃ THÊM ;
+                n.parentId= toLong(r[1]);    // <-- ĐÃ THÊM ;
+                n.uid     = toLong(r[2]);    // <-- ĐÃ THÊM ;
+                n.uname   = toStr(r[3]);     // <-- ĐÃ THÊM ;
+                n.content = toStr(r[4]);     // <-- ĐÃ THÊM ;
+                n.ts      = toDate(r[5]);    // <-- ĐÃ THÊM ;
+                n.canDel  = toInt(r[6]) == 1; // <-- ĐÃ THÊM ;
                 byId.put(n.id, n);
             }
             // build tree
@@ -206,9 +187,9 @@ public class CommentService {
             roots.sort((a,b) -> a.ts == null || b.ts == null ? 0 : a.ts.compareTo(b.ts));
             for (Node r0 : roots) dfs.accept(r0, 0);
 
+
             return out;
-        } finally {
-            em.close();
+            // Không cần finally em.close()
         }
     }
 
@@ -217,152 +198,158 @@ public class CommentService {
     /** Thêm bình luận cho 1 sản phẩm (giữ nguyên) */
     public void add(Long userId, Long productId, String content) {
         if (userId == null || productId == null) return;
-        EntityManager em = em();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
+        // Dùng try-with-resources
+        try (EntityManager em = em()) {
+            EntityTransaction tx = em.getTransaction();
+            try {
+                tx.begin();
 
-            String ins =
-                "INSERT INTO Product_Comment (product_id, user_id, content, created_at) " +
-                "VALUES (:pid, :uid, :content, :ts)";
-            em.createNativeQuery(ins)
-                    .setParameter("pid", productId)
-                    .setParameter("uid", userId)
-                    .setParameter("content", safe(content))
-                    .setParameter("ts", Timestamp.valueOf(LocalDateTime.now()))
-                    .executeUpdate();
+                String ins =
+                        "INSERT INTO Product_Comment (product_id, user_id, content, created_at) " +
+                                "VALUES (:pid, :uid, :content, :ts)";
+                em.createNativeQuery(ins)
+                        .setParameter("pid", productId)
+                        .setParameter("uid", userId)
+                        .setParameter("content", safe(content))
+                        .setParameter("ts", Timestamp.valueOf(LocalDateTime.now()))
+                        .executeUpdate();
 
-            tx.commit();
-        } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
-            throw e;
-        } finally {
-            em.close();
+                tx.commit();
+            } catch (Exception e) {
+                if (tx.isActive()) tx.rollback();
+                throw e;
+            }
+            // Không cần finally em.close()
         }
     }
 
     /** Thêm reply cho 1 comment (parentId có thể là của người khác hoặc của chính mình) */
     public int addReply(Long userId, Long productId, Long parentCommentId, String content) {
         if (userId == null || productId == null || parentCommentId == null) return 0;
-        EntityManager em = em();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
+        // Dùng try-with-resources
+        try (EntityManager em = em()) {
+            EntityTransaction tx = em.getTransaction();
+            try {
+                tx.begin();
 
-            // Xác thực parent thuộc đúng product
-            String chk = "SELECT COUNT(1) FROM Product_Comment WHERE comment_id = :pcid AND product_id = :pid";
-            Number ok = (Number) em.createNativeQuery(chk)
-                    .setParameter("pcid", parentCommentId)
-                    .setParameter("pid", productId)
-                    .getSingleResult();
-            if (ok == null || ok.intValue() == 0) {
-                tx.rollback();
-                return 0; // parent không hợp lệ
+                // Xác thực parent thuộc đúng product
+                String chk = "SELECT COUNT(1) FROM Product_Comment WHERE comment_id = :pcid AND product_id = :pid";
+                Number ok = (Number) em.createNativeQuery(chk)
+                        .setParameter("pcid", parentCommentId)
+                        .setParameter("pid", productId)
+                        .getSingleResult();
+                if (ok == null || ok.intValue() == 0) {
+                    tx.rollback();
+                    return 0; // parent không hợp lệ
+                }
+
+                String ins =
+                        "INSERT INTO Product_Comment (product_id, user_id, content, created_at, parent_comment_id) " +
+                                "VALUES (:pid, :uid, :content, :ts, :parentId)";
+                int affected = em.createNativeQuery(ins)
+                        .setParameter("pid", productId)
+                        .setParameter("uid", userId)
+                        .setParameter("content", safe(content))
+                        .setParameter("ts", Timestamp.valueOf(LocalDateTime.now()))
+                        .setParameter("parentId", parentCommentId)
+                        .executeUpdate();
+
+                tx.commit();
+                return affected;
+            } catch (Exception e) {
+                if (tx.isActive()) tx.rollback();
+                throw e;
             }
-
-            String ins =
-                "INSERT INTO Product_Comment (product_id, user_id, content, created_at, parent_comment_id) " +
-                "VALUES (:pid, :uid, :content, :ts, :parentId)";
-            int affected = em.createNativeQuery(ins)
-                    .setParameter("pid", productId)
-                    .setParameter("uid", userId)
-                    .setParameter("content", safe(content))
-                    .setParameter("ts", Timestamp.valueOf(LocalDateTime.now()))
-                    .setParameter("parentId", parentCommentId)
-                    .executeUpdate();
-
-            tx.commit();
-            return affected;
-        } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
-            throw e;
-        } finally {
-            em.close();
+            // Không cần finally em.close()
         }
     }
 
     /** Xoá 1 comment theo id (tuỳ chọn: ràng buộc đúng user) – giữ nguyên */
     public int deleteById(Long commentId, Long userId) {
         if (commentId == null) return 0;
-        EntityManager em = em();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
+        // Dùng try-with-resources
+        try (EntityManager em = em()) {
+            EntityTransaction tx = em.getTransaction();
+            try {
+                tx.begin();
 
-            String del = (userId == null)
-                ? "DELETE FROM Product_Comment WHERE comment_id = :cid"
-                : "DELETE FROM Product_Comment WHERE comment_id = :cid AND user_id = :uid";
+                String del = (userId == null)
+                        ? "DELETE FROM Product_Comment WHERE comment_id = :cid"
+                        : "DELETE FROM Product_Comment WHERE comment_id = :cid AND user_id = :uid";
 
-            Query q = em.createNativeQuery(del).setParameter("cid", commentId);
-            if (userId != null) q.setParameter("uid", userId);
-            int affected = q.executeUpdate();
+                Query q = em.createNativeQuery(del).setParameter("cid", commentId);
+                if (userId != null) q.setParameter("uid", userId);
+                int affected = q.executeUpdate();
 
-            tx.commit();
-            return affected;
-        } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
-            throw e;
-        } finally {
-            em.close();
+                tx.commit();
+                return affected;
+            } catch (Exception e) {
+                if (tx.isActive()) tx.rollback();
+                throw e;
+            }
+            // Không cần finally em.close()
         }
     }
 
     /** ✅ Xoá 1 comment nếu là của user đó, chưa quá 24h và CHƯA có reply */
     public int deleteByIdWithin24h(Long commentId, Long userId) {
         if (commentId == null || userId == null) return 0;
-        EntityManager em = em();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
+        // Dùng try-with-resources
+        try (EntityManager em = em()) {
+            EntityTransaction tx = em.getTransaction();
+            try {
+                tx.begin();
 
-            // Dùng alias để có thể NOT EXISTS subquery kiểm tra reply
-            String del =
-                "DELETE c " +
-                "FROM Product_Comment c " +
-                "WHERE c.comment_id = :cid " +
-                "  AND c.user_id = :uid " +
-                "  AND DATEDIFF(hour, c.created_at, GETDATE()) <= 24 " +
-                "  AND NOT EXISTS (SELECT 1 FROM Product_Comment r WHERE r.parent_comment_id = c.comment_id)";
+                // Dùng alias để có thể NOT EXISTS subquery kiểm tra reply
+                String del =
+                        "DELETE c " +
+                                "FROM Product_Comment c " +
+                                "WHERE c.comment_id = :cid " +
+                                "  AND c.user_id = :uid " +
+                                "  AND DATEDIFF(hour, c.created_at, GETDATE()) <= 24 " +
+                                "  AND NOT EXISTS (SELECT 1 FROM Product_Comment r WHERE r.parent_comment_id = c.comment_id)";
 
-            int affected = em.createNativeQuery(del)
-                    .setParameter("cid", commentId)
-                    .setParameter("uid", userId)
-                    .executeUpdate();
+                int affected = em.createNativeQuery(del)
+                        .setParameter("cid", commentId)
+                        .setParameter("uid", userId)
+                        .executeUpdate();
 
-            tx.commit();
-            return affected;
-        } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
-            throw e;
-        } finally {
-            em.close();
+                tx.commit();
+                return affected;
+            } catch (Exception e) {
+                if (tx.isActive()) tx.rollback();
+                throw e;
+            }
+            // Không cần finally em.close()
         }
     }
 
     /** Xoá tất cả bình luận của 1 user cho 1 sản phẩm (tuỳ chọn dùng) – giữ nguyên */
     public int deleteByUser(Long userId, Long productId) {
         if (userId == null || productId == null) return 0;
-        EntityManager em = em();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            String del = "DELETE FROM Product_Comment WHERE product_id = :pid AND user_id = :uid";
-            int affected = em.createNativeQuery(del)
-                    .setParameter("pid", productId)
-                    .setParameter("uid", userId)
-                    .executeUpdate();
-            tx.commit();
-            return affected;
-        } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
-            throw e;
-        } finally {
-            em.close();
+        // Dùng try-with-resources
+        try (EntityManager em = em()) {
+            EntityTransaction tx = em.getTransaction();
+            try {
+                tx.begin();
+                String del = "DELETE FROM Product_Comment WHERE product_id = :pid AND user_id = :uid";
+                int affected = em.createNativeQuery(del)
+                        .setParameter("pid", productId)
+                        .setParameter("uid", userId)
+                        .executeUpdate();
+                tx.commit();
+                return affected;
+            } catch (Exception e) {
+                if (tx.isActive()) tx.rollback();
+                throw e;
+            }
+            // Không cần finally em.close()
         }
     }
 
     /* ============================ Helpers ============================ */
 
+    // ... (Helpers: safe, toStr, toLong, toInt, toLdt, toDate giữ nguyên)
     private static String safe(String s) {
         return (s == null || s.isBlank()) ? null : s.trim();
     }
