@@ -48,10 +48,8 @@ public class ProductImageService {
         EntityManager em = JPAConfig.getEntityManager();
         try {
             return (String) em.createNativeQuery(
-                "SELECT image_url\r\n"
-                + "FROM Product_Image\r\n"
-                + "WHERE product_id = ? AND is_thumbnail = true\r\n"
-                + "LIMIT 1;")
+                "SELECT TOP 1 image_url FROM Product_Image " +
+                "WHERE product_id = ? AND is_thumbnail = 1")
                 .setParameter(1, productId)
                 .getResultStream()
                 .findFirst()
