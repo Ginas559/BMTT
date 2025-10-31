@@ -54,13 +54,16 @@ public class StatisticService {
     }
 
     // --- REVENUE BY MONTH (legacy, không filter) ---
+    // Đã sửa: Thay FUNCTION('MONTH', ...) bằng FUNCTION('date_part', 'month', ...)
     public List<Object[]> getRevenueByMonth(Long shopId){
         EntityManager em = JPAConfig.getEntityManager();
         try{
-            return em.createQuery(
-                "SELECT FUNCTION('MONTH', o.createdAt), COALESCE(SUM(o.totalAmount),0) " +
+            // PostgreSQL sử dụng DATE_PART/EXTRACT chứ không dùng MONTH()
+            String jpql = "SELECT FUNCTION('date_part', 'month', o.createdAt), COALESCE(SUM(o.totalAmount),0) " +
                 "FROM Order o WHERE o.shop.shopId=:sid AND o.status=:st " +
-                "GROUP BY FUNCTION('MONTH', o.createdAt) ORDER BY FUNCTION('MONTH', o.createdAt)", Object[].class)
+                "GROUP BY FUNCTION('date_part', 'month', o.createdAt) ORDER BY FUNCTION('date_part', 'month', o.createdAt)";
+            
+            return em.createQuery(jpql, Object[].class)
                 .setParameter("sid", shopId)
                 .setParameter("st", Order.OrderStatus.DELIVERED)
                 .getResultList();
@@ -68,15 +71,18 @@ public class StatisticService {
     }
 
     // --- REVENUE BY (YEAR, MONTH) BETWEEN ---
+    // Đã sửa: Thay FUNCTION('YEAR', ...) và FUNCTION('MONTH', ...)
     public List<Object[]> revenueByYearMonthBetween(Long shopId, LocalDateTime start, LocalDateTime end){
         EntityManager em = JPAConfig.getEntityManager();
         try{
-            return em.createQuery(
-                "SELECT FUNCTION('YEAR', o.createdAt), FUNCTION('MONTH', o.createdAt), COALESCE(SUM(o.totalAmount),0) " +
+            // PostgreSQL sử dụng DATE_PART/EXTRACT
+            String jpql = "SELECT FUNCTION('date_part', 'year', o.createdAt), FUNCTION('date_part', 'month', o.createdAt), COALESCE(SUM(o.totalAmount),0) " +
                 "FROM Order o WHERE o.shop.shopId=:sid AND o.status=:st " +
                 "AND o.createdAt>=:start AND o.createdAt<:end " +
-                "GROUP BY FUNCTION('YEAR', o.createdAt), FUNCTION('MONTH', o.createdAt) " +
-                "ORDER BY FUNCTION('YEAR', o.createdAt), FUNCTION('MONTH', o.createdAt)", Object[].class)
+                "GROUP BY FUNCTION('date_part', 'year', o.createdAt), FUNCTION('date_part', 'month', o.createdAt) " +
+                "ORDER BY FUNCTION('date_part', 'year', o.createdAt), FUNCTION('date_part', 'month', o.createdAt)";
+                
+            return em.createQuery(jpql, Object[].class)
                 .setParameter("sid", shopId)
                 .setParameter("st", Order.OrderStatus.DELIVERED)
                 .setParameter("start", start)
