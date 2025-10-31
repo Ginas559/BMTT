@@ -15,4 +15,4 @@ RUN chmod +x /start.sh # Cấp quyền thực thi cho start script
 COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE 8080 
-CMD ["/start.sh"] # Thực thi script khởi động
+CMD /start.sh
