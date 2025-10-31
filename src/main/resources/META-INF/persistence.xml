@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
+https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+	version="3.0">
+
+	<persistence-unit name="dataSource">
+		<class>vn.iotstar.entities.Address</class>
+		<class>vn.iotstar.entities.Cart</class>
+		<class>vn.iotstar.entities.CartItem</class>
+		<class>vn.iotstar.entities.Category</class>
+		<class>vn.iotstar.entities.ChatMessage</class>
+		<class>vn.iotstar.entities.Coupon</class>
+		<class>vn.iotstar.entities.Favorite</class>
+		<class>vn.iotstar.entities.Order</class>
+		<class>vn.iotstar.entities.OrderItem</class>
+		<class>vn.iotstar.entities.Payment</class>
+		<class>vn.iotstar.entities.Product</class>
+		<class>vn.iotstar.entities.ProductComment</class>
+		<class>vn.iotstar.entities.ProductImage</class>
+		<class>vn.iotstar.entities.ProductReview</class>
+		<class>vn.iotstar.entities.Promotion</class>
+
+		<class>vn.iotstar.entities.Shipper</class>
+		<class>vn.iotstar.entities.ShipperPost</class>
+		<class>vn.iotstar.entities.ShippingPartner</class>
+		<class>vn.iotstar.entities.Shop</class>
+		<class>vn.iotstar.entities.ShopFeaturedImage</class>
+		
+		<class>vn.iotstar.entities.User</class>
+		<class>vn.iotstar.entities.UserOtp</class>
+		<class>vn.iotstar.entities.UserVerification</class>
+
+		<!-- ✅ Thêm entity ghi nhận sản phẩm đã xem -->
+		<class>vn.iotstar.entities.ViewedProduct</class>
+
+
+		<class>vn.iotstar.entities.ViewedProduct</class>
+		<class>vn.iotstar.entities.Favorite</class>
+		
+		<class>vn.iotstar.entities.ProductComment</class>
+		<class>vn.iotstar.entities.ProductReview</class>
+		<class>vn.iotstar.entities.ProductReviewImage</class>
+
+		<class>vn.iotstar.entities.Voucher</class>
+		<class>vn.iotstar.entities.VoucherProduct</class>
+
+		<class>vn.iotstar.entities.ProductVariant</class>
+		<class>vn.iotstar.entities.ShoeAttribute</class>
+
+
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+		<properties>
+			<property name="jakarta.persistence.jdbc.url"
+				value="jdbc:sqlserver://localhost:1433;databaseName=shoesshop;encrypt=true;trustServerCertificate=true;" />
+			<property name="jakarta.persistence.jdbc.driver"
+				value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+			<property name="jakarta.persistence.jdbc.user" value="sa" />
+			<property name="jakarta.persistence.jdbc.password" value="123456" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+			<property name="hibernate.dialect"
+				value="org.hibernate.dialect.SQLServer2012Dialect" />
+		</properties>
+	</persistence-unit>
+</persistence>

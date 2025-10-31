@@ -1,0 +1,39 @@
+
+# =========================
+# Build output
+# =========================
+
+# Ignore build output
+
+target/
+bin/
+out/
+build/
+
+# =========================
+# IDE files
+# =========================
+
+# IDE files
+.classpath
+.project
+.settings/
+.factorypath
+
+# =========================
+# Logs & temp
+# =========================
+*.log
+*.tmp
+*.swp
+.DS_Store
+
+# =========================
+# Environment files
+# =========================
+.env
+
+# =========================
+# OS-specific
+# =========================
+Thumbs.db

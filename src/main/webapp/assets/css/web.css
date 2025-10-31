@@ -1,0 +1,2583 @@
+@charset "UTF-8";
+/*
+ * File: web.css
+ * Mục đích: Thêm hiệu ứng màu mè cho BMTT Shop
+ */
+
+/* ================================================================== */
+/* 1. HIỆU ỨNG NỀN GRADIENT CHUYỂN ĐỘNG (NAVBAR & FOOTER)
+/* ================================================================== */
+
+/* * Định nghĩa chuyển động.
+ * Chúng ta sẽ di chuyển vị trí của một background-size siêu lớn.
+ */
+@keyframes gradient-animation {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+/* Áp dụng cho Navbar */
+.navbar-colorful {
+	/* Tạo dải màu gradient */
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	/* Kích thước nền lớn hơn 400% để có chỗ di chuyển */
+	background-size: 400% 400%;
+	/* Gọi keyframe animation */
+	animation: gradient-animation 15s ease infinite;
+	
+	/* Tinh chỉnh lại chữ trên Navbar */
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Đổi màu chữ navbar-brand và nav-link (do nền đã tối) */
+.navbar-colorful .navbar-brand, 
+.navbar-colorful .nav-link,
+.navbar-colorful .dropdown-toggle {
+	color: #ffffff !important; /* Dùng !important để đè class .navbar-dark của Bootstrap */
+	font-weight: 600;
+}
+
+/* Đổi màu icon Toggler (cái nút 3 gạch) sang màu trắng */
+.navbar-colorful .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+
+/* Áp dụng cho Footer */
+.footer-colorful {
+	background: linear-gradient(-45deg, #23a6d5, #23d5ab, #ee7752, #e73c7e);
+	background-size: 400% 400%;
+	/* Cho footer chạy chậm hơn navbar một chút */
+	animation: gradient-animation 20s ease infinite;
+	color: #ffffff;
+}
+
+/* Đổi màu chữ và link ở footer */
+.footer-colorful span, 
+.footer-colorful a {
+	color: #ffffff !important;
+	font-weight: 500;
+}
+
+/* ================================================================== */
+/* 2. HIỆU ỨNG "MAGIC" HOVER CHO NAV-LINK
+/* ================================================================== */
+
+.navbar-colorful .nav-link {
+	position: relative; /* Cần thiết để định vị pseudo-element ::after */
+	padding-bottom: 8px !important; /* Thêm không gian cho gạch chân */
+}
+
+/* Đây là phần "ma thuật" - cái gạch chân */
+.navbar-colorful .nav-link::after {
+	content: '';
+	position: absolute; /* Đặt nó tuyệt đối so với .nav-link */
+	bottom: 0;
+	left: 50%; /* Bắt đầu từ giữa */
+	transform: translateX(-50%); /* Căn nó ra giữa chuẩn */
+	width: 0%; /* Ban đầu ẩn đi (width = 0) */
+	height: 3px;
+	background-color: #ffffff;
+	border-radius: 2px;
+	transition: width 0.3s ease-in-out; /* Hiệu ứng khi width thay đổi */
+	
+	/* Thêm hiệu ứng glow (phát sáng) cho gạch chân */
+	box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* Khi hover vào .nav-link, cho ::after bung ra */
+.navbar-colorful .nav-link:hover::after,
+.navbar-colorful .nav-link.active::after { /* Cũng áp dụng cho link đang active */
+	width: 80%; /* Bung ra 80% chiều rộng */
+}
+
+
+/* ================================================================== */
+/* 3. HIỆU ỨNG "PULSE" (THỞ) CHO BUTTONS
+/* ================================================================== */
+
+/* Keyframe cho nút Primary (xanh) */
+@keyframes pulse-primary {
+	0% {
+		box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+	}
+	70% {
+		box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+	}
+}
+
+/* Keyframe cho nút Danger (đỏ) */
+@keyframes pulse-danger {
+	0% {
+		box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+	}
+	70% {
+		box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+	}
+}
+
+/* Áp dụng animation */
+.btn-primary {
+	animation: pulse-primary 2s infinite;
+}
+
+.btn-danger {
+	animation: pulse-danger 2s infinite;
+}
+
+/* ================================================================== */
+/* 4. HIỆU ỨNG "SHINE" (VỆT SÁNG) KHI HOVER CHO TẤT CẢ BUTTON
+/* ================================================================== */
+
+.btn {
+	position: relative; /* Cần để chứa vệt sáng */
+	overflow: hidden; /* Ẩn vệt sáng khi nó ở ngoài */
+	transition: transform 0.2s ease; /* Thêm hiệu ứng phóng to nhẹ */
+}
+
+.btn:hover {
+	transform: scale(1.05); /* Phóng to nhẹ khi hover */
+}
+
+/* Đây là vệt sáng */
+.btn::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%; /* Ban đầu giấu bên trái */
+	width: 50%;
+	height: 100%;
+	/* Vệt sáng là 1 dải gradient xéo */
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(255, 255, 255, 0.4),
+		transparent
+	);
+	transform: skewX(-30deg); /* Làm nó xéo đi */
+	transition: left 0.7s cubic-bezier(0.23, 1, 0.32, 1); /* Hiệu ứng di chuyển */
+}
+
+/* Khi hover, di chuyển vệt sáng sang phải */
+.btn:hover::before {
+	left: 150%;
+}
+
+
+/* =S================================================================ */
+/* 5. HIỆU ỨNG FADE-IN CHO NỘI DUNG TRANG
+/* ================================================================== */
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(20px); /* Hơi trượt nhẹ từ dưới lên */
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Áp dụng cho thẻ <main> */
+main.container {
+	animation: fadeIn 0.8s ease-out;
+}
+
+/* ================================================================== */
+/* 6. STYLE CHO LOGO NAVBAR
+/* ================================================================== */
+.navbar-logo {
+	height: 30px; /* Chỉnh chiều cao logo */
+	width: auto;
+	margin-right: 8px; /* Khoảng cách với chữ "BMTT Shop" */
+	border-radius: 4px; /* Bo góc nhẹ cho logo */
+	background-color: rgba(255, 255, 255, 0.2); /* Thêm 1 lớp nền mờ cho đẹp */
+	padding: 2px;
+	
+	/* Hiệu ứng xoay khi hover */
+	transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.navbar-brand:hover .navbar-logo {
+	transform: rotate(-15deg) scale(1.1);
+}
+
+
+/* ================================================================== */
+/* 7. STYLE NÚT "XIN CHÀO" (btn-outline-secondary)
+/* ================================================================== */
+.navbar-colorful .btn-outline-secondary {
+	color: #ffffff; /* Chữ trắng */
+	border-color: rgba(255, 255, 255, 0.7); /* Viền trắng mờ */
+}
+
+/* Đổi màu khi hover cho nó "chất" */
+.navbar-colorful .btn-outline-secondary:hover {
+	color: #0a4a64; /* Chữ màu xanh đậm (hợp với theme) */
+	background-color: #ffffff; /* Nền trắng */
+	border-color: #ffffff;
+}
+
+
+/* ================================================================== */
+/* 8. STYLE "MÀU MÈ" CHO VENDOR DROPDOWN MENU
+/* ================================================================== */
+
+/* Tùy chỉnh cái khung menu */
+.navbar-colorful .dropdown-menu {
+	/* Dùng 1 màu trong dải gradient làm nền */
+	background-color: #23a6d5; /* Màu xanh dương */
+	
+	/* Hoặc bro có thể thử nền gradient này nếu muốn "cháy" hơn */
+	/* background: linear-gradient(135deg, #23a6d5, #23d5ab); */
+
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-radius: 8px; /* Bo góc */
+	margin-top: 8px !important; /* Đẩy nó xuống 1 tí cho đẹp */
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+	
+	/* Thêm hiệu ứng kính mờ (nếu bro thích) */
+	/* backdrop-filter: blur(5px); */
+	/* background-color: rgba(35, 166, 213, 0.8); */
+}
+
+/* Tùy chỉnh các mục con (Dashboard, Sản phẩm,...) */
+.navbar-colorful .dropdown-item {
+	color: #ffffff; /* Chữ trắng */
+	font-weight: 500;
+	padding: 10px 20px;
+	
+	/* Hiệu ứng chuyển động mượt mà */
+	transition: all 0.2s ease-in-out;
+}
+
+/* Hiệu ứng hover "ma thuật" cho các mục con */
+.navbar-colorful .dropdown-item:hover,
+.navbar-colorful .dropdown-item:focus {
+	color: #ffffff;
+	
+	/* Lấy màu hồng trong dải gradient để làm nền hover */
+	background-color: #e73c7e; 
+	
+	/* Hiệu ứng trượt nhẹ sang phải */
+	transform: translateX(5px);
+	
+	/* Tạo 1 cái viền trái phát sáng (tùy chọn) */
+	/* border-left: 4px solid #ee7752; */
+	
+	border-radius: 4px; /* Bo góc luôn cái item khi hover */
+}
+
+
+/* ================================================================== */
+/* 9. TĂNG KÍCH THƯỚC NAVBAR (FONT)
+/* Ghi đè lại 2 class cũ để tăng font-size
+/* ================================================================== */
+
+/* Tăng kích thước chữ "BMTT Shop" */
+.navbar-colorful .navbar-brand {
+	font-size: 1.4rem; /* Tăng từ 1.25rem (mặc định) lên 1.4rem */
+	font-weight: 600;
+}
+
+/* Tăng kích thước các link menu (Sản phẩm, Yêu thích,...) */
+.navbar-colorful .nav-link,
+.navbar-colorful .dropdown-toggle {
+	color: #ffffff !important; 
+	font-weight: 600;
+	font-size: 1.05rem; /* Tăng nhẹ kích thước link */
+}
+
+
+/* ================================================================== */
+/* 10. STYLE CHO FOOTER MỚI "HOÀNH TRÁNG"
+/* ================================================================== */
+
+/* Ghi đè lại class .footer-colorful cũ để tăng padding */
+.footer-colorful {
+	/* Xóa padding cũ đi, thay bằng cái này */
+	padding-top: 3rem; /* ~ 48px */
+	padding-bottom: 0; /* Bỏ padding-bottom vì .footer-bottom sẽ lo */
+	
+	/* Các thuộc tính cũ (gradient, animation) vẫn giữ nguyên */
+	background: linear-gradient(-45deg, #23a6d5, #23d5ab, #ee7752, #e73c7e);
+	background-size: 400% 400%;
+	animation: gradient-animation 20s ease infinite;
+	color: #ffffff;
+}
+
+/* Tiêu đề các cột (Thông tin, Liên lạc,...) */
+.footer-heading {
+	font-weight: 700;
+	color: #ffffff;
+	margin-bottom: 1.25rem;
+	text-transform: uppercase; /* Viết hoa cho "pro" */
+	letter-spacing: 1px;
+	text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Chữ mô tả chung */
+.footer-text {
+	color: rgba(255, 255, 255, 0.85); /* Hơi mờ 1 tí cho dễ đọc */
+	line-height: 1.6;
+}
+
+/* Style cho cột "Thông tin liên lạc" */
+.contact-info {
+	color: rgba(255, 255, 255, 0.85);
+}
+.contact-info li {
+	display: flex;
+	align-items: flex-start; /* Căn trên cùng */
+	margin-bottom: 10px;
+}
+.contact-info i {
+	margin-right: 12px;
+	margin-top: 4px; /* Căn icon với dòng chữ */
+	color: #ffffff; /* Cho icon sáng hơn chữ */
+	font-size: 1.1rem;
+}
+
+/* Đảm bảo map iframe co giãn và đẹp */
+.map-responsive {
+	overflow: hidden;
+	border-radius: 8px; /* Bo góc cái map */
+	border: 2px solid rgba(255, 255, 255, 0.3);
+	box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.map-responsive iframe {
+	display: block; /* Bỏ khoảng trắng thừa bên dưới iframe */
+}
+
+/* Thanh copyright ở dưới cùng */
+.footer-bottom {
+	margin-top: 2rem; /* Tạo khoảng cách với nội dung bên trên */
+	/* Dùng 1 màu tối hơn 1 chút (hoặc trong suốt) */
+	background-color: rgba(0, 0, 0, 0.15); 
+	backdrop-filter: blur(2px); /* Hiệu ứng kính mờ nhẹ */
+}
+
+/* Chữ và link ở thanh copyright */
+.footer-bottom span,
+.footer-bottom a {
+	color: #ffffff !important;
+	font-weight: 500;
+}
+
+.footer-bottom a:hover {
+	text-decoration: underline !important;
+}
+
+
+/* ================================================================== */
+/* 11. STYLE CHO VENDOR DASHBOARD
+/* ================================================================== */
+
+/* Keyframe mới cho hiệu ứng trượt lên */
+@keyframes slideInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Áp dụng animation cho các khối dashboard (staggered - nối tiếp nhau) */
+.main-dashboard .kpi-cards {
+	animation: slideInUp 0.5s ease-out 0.2s; /* Trễ 0.2s */
+	animation-fill-mode: backwards; /* Giữ trạng thái "from" trước khi chạy */
+}
+.main-dashboard .chart-cards {
+	animation: slideInUp 0.5s ease-out 0.4s; /* Trễ 0.4s */
+	animation-fill-mode: backwards;
+}
+.main-dashboard .recent-orders-card {
+	animation: slideInUp 0.5s ease-out 0.6s; /* Trễ 0.6s */
+	animation-fill-mode: backwards;
+}
+
+/* Class tạo chữ gradient */
+.gradient-text {
+	/* Dùng lại dải màu gradient "cháy" của mình */
+	background: linear-gradient(
+		-45deg,
+		#e73c7e,
+		#23a6d5,
+		#23d5ab
+	);
+	background-size: 300% 300%;
+	/* Cho nó chuyển động nhẹ */
+	animation: gradient-animation 10s ease infinite;
+
+	/* Kỹ thuật "cắt" chữ */
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent; /* Fallback */
+}
+
+/* ================================================================== */
+/* 12. HIỆU ỨNG THẺ KPI VÀ CHART
+/* ================================================================== */
+.kpi-card {
+	border: 0; /* Bỏ border mặc định của card */
+	/* Thêm 1 cái viền trong suốt nhẹ */
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.kpi-card:hover {
+	/* Hiệu ứng "nâng" thẻ lên */
+	transform: translateY(-10px);
+	/* Thêm hiệu ứng "phát sáng" (glow) màu hồng */
+	box-shadow: 0 10px 25px rgba(231, 60, 126, 0.3);
+}
+
+/* Đổi màu số liệu KPI (display-6) cho nổi bật */
+.kpi-card .display-6 {
+	font-weight: 700;
+	/* Cho nó 1 màu xanh dương trong theme */
+	color: #23a6d5;
+}
+
+/* Nếu bro muốn số liệu cũng là gradient thì dùng class .gradient-text 
+   (như tui đã thêm ở Bước 1) */
+.kpi-card .display-6.gradient-text {
+	font-weight: 700;
+}
+
+
+/* ================================================================== */
+/* 13. STYLE CHO CÁC NÚT BẤM CÒN LẠI
+/* ================================================================== */
+
+/* Keyframe cho nút Success (Xanh lá) */
+@keyframes pulse-success {
+	0% {
+		box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7);
+	}
+	70% {
+		box-shadow: 0 0 0 10px rgba(25, 135, 84, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(25, 135, 84, 0);
+	}
+}
+/* Keyframe cho nút Outline (Chat) */
+@keyframes pulse-outline {
+	0% {
+		box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4);
+	}
+	70% {
+		box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+	}
+}
+
+/* Áp dụng animation */
+.btn-success {
+	animation: pulse-success 2.5s infinite; /* Cho nó chậm hơn 1 tí */
+}
+.btn-chat {
+	animation: pulse-outline 2s infinite;
+}
+
+/* Nút "Áp dụng" (Filter) */
+.main-dashboard .btn-outline-secondary {
+	border-color: #23a6d5;
+	color: #23a6d5;
+}
+.main-dashboard .btn-outline-secondary:hover {
+	background-color: #23a6d5;
+	color: #ffffff;
+}
+
+/* ================================================================== */
+/* 14. STYLE BẢNG "ĐƠN GẦN ĐÂY"
+/* ================================================================== */
+
+.recent-orders-card .table thead {
+	/* Header bảng dùng gradient "cháy" của navbar */
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient-animation 15s ease infinite;
+	color: #ffffff;
+	border: 0;
+}
+.recent-orders-card .table thead th {
+	color: #ffffff;
+	border: 0;
+}
+
+/* Hiệu ứng hover cho dòng trong bảng */
+.recent-orders-card .table-hover tbody tr:hover {
+	/* Dùng 1 màu hồng rất nhạt */
+	background-color: rgba(231, 60, 126, 0.05);
+	transform: scale(1.01); /* Hơi phóng to nhẹ */
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease-in-out;
+}
+
+/* Thêm "glow" cho các status badge */
+.badge.bg-success {
+	box-shadow: 0 0 10px rgba(25, 135, 84, 0.7);
+}
+.badge.bg-warning {
+	color: #333 !important; /* Chữ tối cho dễ đọc */
+	box-shadow: 0 0 10px rgba(255, 193, 7, 0.7);
+}
+.badge.bg-danger {
+	box-shadow: 0 0 10px rgba(220, 53, 69, 0.7);
+}
+.badge.bg-info {
+	box-shadow: 0 0 10px rgba(13, 202, 240, 0.7);
+}
+.badge.bg-primary {
+	box-shadow: 0 0 10px rgba(13, 110, 253, 0.7);
+}
+/* ================================================================== */
+/* 15. (CẬP NHẬT) NỀN DASHBOARD GIỐNG FOOTER (MÀU NHẸ)
+/* ================================================================== */
+
+body:has(.main-dashboard) {
+	/* * Dải màu pastel MỚI - Lấy màu từ footer nhưng giảm opacity (độ mờ)
+	 * Chúng ta đặt nó lên trên một nền trắng (#ffffff)
+	 */
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	
+	/* Phải có 1 màu nền trắng bên dưới lớp gradient mờ này */
+	background-color: #ffffff; 
+	
+	background-size: 400% 400%;
+	/* Giữ nguyên tốc độ chạy CỰC KỲ CHẬM để không bị phân tâm */
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* ================================================================== */
+/* 16. (FIX V2) - TÔ MÀU 3 KHU VỰC "XẤU"
+/* ================================================================== */
+
+/* Card 1 (Thêm) - Nền hồng pastel */
+.main-products .kpi-card {
+	background: #fff0f5; /* Màu "LavenderBlush" (hồng siêu nhạt) */
+	border: 0;
+	backdrop-filter: none !important; /* Tắt hẳn kính mờ */
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Card 2 (Lọc) - Nền xanh pastel */
+/* Dùng selector "adjacent sibling" (cái .kpi-card NẰM NGAY SAU .kpi-card) */
+.main-products .kpi-card + .kpi-card {
+	background: #f0faff; /* Màu "AliceBlue" (xanh siêu nhạt) */
+}
+
+/* Card 3 (Bảng) - Nền tím pastel (như cũ) */
+.main-products .recent-orders-card {
+	background: #f8f7ff;
+	border: 0;
+	backdrop-filter: none !important;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Giữ hiệu ứng hover cho cả 3 card */
+.kpi-card:hover,
+.recent-orders-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 10px 25px rgba(231, 60, 126, 0.3);
+}
+
+/* Tiêu đề card (cho đậm) */
+.kpi-card .card-title,
+.recent-orders-card .card-title {
+	color: #333;
+	font-weight: 600;
+}
+
+/* ================================================================== */
+/* 17. (FIX V2) - "HẠ GỤC" INPUTS TRẮNG (DÙNG !important)
+/* ================================================================== */
+.kpi-card .form-control,
+.kpi-card .form-select {
+	/* Nền trắng mờ (để thấy màu card bên dưới) */
+	background-color: rgba(255, 255, 255, 0.7) !important;
+	border: 1px solid rgba(0, 0, 0, 0.1) !important;
+	color: #333;
+	font-weight: 500;
+	box-shadow: none;
+}
+
+.kpi-card .form-control:focus,
+.kpi-card .form-select:focus {
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 10px rgba(231, 60, 126, 0.3) !important;
+}
+
+/* ================================================================== */
+/* 18. (FIX V2) - NÚT "THÊM" VÀ "LỌC" (DÙNG !important)
+/* ================================================================== */
+
+/* Nút "Thêm" (trong card hồng) */
+/* Selector này nghĩa là: .kpi-card KHÔNG PHẢI là cái .kpi-card nằm sau 1 cái .kpi-card khác */
+.main-products .kpi-card:not(.kpi-card + .kpi-card) .btn-primary {
+	background-color: #e73c7e !important; /* Hồng "cháy" */
+	border-color: #e73c7e !important;
+	font-weight: 600;
+}
+
+/* Nút "Lọc" (trong card xanh) */
+.main-products .kpi-card + .kpi-card .btn-secondary {
+	background-color: #23a6d5 !important; /* Xanh "cháy" */
+	border-color: #23a6d5 !important;
+	font-weight: 600;
+}
+
+/* ================================================================== */
+/* 19. (FIX V2) - "HẠ GỤC" BẢNG TRẮNG (DÙNG !important)
+/* ================================================================== */
+
+/* Header bảng (ID, Ảnh, Tên,...) */
+.recent-orders-card .table thead {
+	background: #e73c7e !important; /* Màu hồng đậm "CHÁY" */
+	color: #ffffff;
+}
+
+/* Bỏ màu nền mặc định của hàng (kể cả table-striped) */
+.recent-orders-card .table tbody tr {
+	background-color: transparent !important;
+	color: #333;
+	font-weight: 500;
+	transition: all 0.2s ease-in-out;
+}
+
+/* Hover (giữ nguyên) */
+.recent-orders-card .table-hover tbody tr:hover {
+	background-color: rgba(231, 60, 126, 0.15) !important;
+	transform: scale(1.015);
+	box-shadow: 0 4px 15px rgba(231, 60, 126, 0.2);
+	border-radius: 8px;
+}
+
+/* ================================================================== */
+/* 20. (FIX V2) - "HẠ GỤC" CÁC NÚT OUTLINE (DÙNG !important)
+/* ================================================================== */
+
+.product-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	vertical-align: middle;
+}
+.product-actions .btn:hover {
+	transform: scale(1.1);
+	opacity: 0.9;
+}
+
+/* "Nhuộm" từng nút (dùng !important để CHIẾN THẮNG) */
+.product-actions .btn.btn-outline-primary {
+	background-color: #23a6d5 !important; /* Sửa (Xanh biển) */
+	color: #ffffff !important;
+	border: 0;
+}
+.product-actions .btn.btn-outline-warning {
+	background-color: #ffc107 !important; /* Biến thể (Vàng) */
+	color: #333 !important;
+	border: 0;
+}
+.product-actions .btn.btn-outline-secondary {
+	background-color: #6c757d !important; /* Thuộc tính (Xám) */
+	color: #ffffff !important;
+	border: 0;
+}
+.product-actions .btn.btn-outline-danger {
+	background-color: #dc3545 !important; /* Ẩn (Đỏ) */
+	color: #ffffff !important;
+	border: 0;
+}
+.product-actions .btn.btn-outline-success {
+	background-color: #198754 !important; /* Hiện (Xanh lá) */
+	color: #ffffff !important;
+	border: 0;
+}
+
+/* ================================================================== */
+/* 23. STYLE PHÂN TRANG (PAGINATION) "KÍNH MỜ"
+/* ================================================================== */
+
+.pagination-glass .page-item {
+	margin: 0 2px; /* Tạo khoảng cách nhỏ */
+}
+
+.pagination-glass .page-link {
+	border: 0;
+	border-radius: 8px; /* Bo góc */
+	font-weight: 600;
+	
+	/* Hiệu ứng kính mờ */
+	background: rgba(255, 255, 255, 0.4);
+	backdrop-filter: blur(5px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+	
+	/* Chữ màu hồng pastel */
+	color: #e73c7e;
+	
+	transition: all 0.2s ease-in-out;
+}
+
+/* Khi hover */
+.pagination-glass .page-link:hover {
+	background: rgba(255, 255, 255, 0.7);
+	color: #e73c7e;
+	transform: translateY(-2px);
+}
+
+/* Trang đang được chọn (active) */
+.pagination-glass .page-item.active .page-link {
+	background-color: #e73c7e; /* Nền hồng đậm */
+	color: #ffffff;
+	border-color: #e73c7e;
+	box-shadow: 0 5px 15px rgba(231, 60, 126, 0.4);
+	transform: translateY(-2px);
+}
+
+/* Trang bị vô hiệu hóa (disabled) */
+.pagination-glass .page-item.disabled .page-link {
+	background: rgba(255, 255, 255, 0.2);
+	backdrop-filter: none;
+	color: #aaa;
+	box-shadow: none;
+}
+
+/* ================================================================== */
+/* 19. (FIX CUỐI) - NỀN PASTEL CHO TRANG SẢN PHẨM (Phần tui quên)
+/* ================================================================== */
+body:has(.main-products) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+
+/* ================================================================== */
+/* 20. (FIX CUỐI) - TÔ MÀU 3 KHU VỰC "XẤU"
+/* ================================================================== */
+
+/* Card 1 (Thêm) - Nền hồng pastel */
+.main-products .kpi-card {
+	background: #fff0f5; /* Màu "LavenderBlush" (hồng siêu nhạt) */
+	border: 0;
+	backdrop-filter: none !important; /* Tắt hẳn kính mờ */
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Card 2 (Lọc) - Nền xanh pastel */
+.main-products .kpi-card + .kpi-card {
+	background: #f0faff; /* Màu "AliceBlue" (xanh siêu nhạt) */
+}
+
+/* Card 3 (Bảng) - Nền tím pastel */
+.main-products .recent-orders-card {
+	background: #f8f7ff; /* Tím siêu nhạt */
+	border: 0;
+	backdrop-filter: none !important;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Giữ hiệu ứng hover cho cả 3 card */
+.kpi-card:hover,
+.recent-orders-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 10px 25px rgba(231, 60, 126, 0.3);
+}
+
+/* Tiêu đề card (cho đậm) */
+.kpi-card .card-title,
+.recent-orders-card .card-title {
+	color: #333;
+	font-weight: 600;
+}
+
+/* ================================================================== */
+/* 21. (FIX CUỐI) - "HẠ GỤC" INPUTS TRẮNG (DÙNG !important)
+/* ================================================================== */
+.kpi-card .form-control,
+.kpi-card .form-select {
+	/* Nền trắng mờ (để thấy màu card bên dưới) */
+	background-color: rgba(255, 255, 255, 0.7) !important;
+	border: 1px solid rgba(0, 0, 0, 0.1) !important;
+	color: #333;
+	font-weight: 500;
+	box-shadow: none;
+}
+
+.kpi-card .form-control:focus,
+.kpi-card .form-select:focus {
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 10px rgba(231, 60, 126, 0.3) !important;
+}
+
+/* ================================================================== */
+/* 22. (FIX CUỐI) - NÚT "THÊM" VÀ "LỌC" (DÙNG !important)
+/* ================================================================== */
+
+/* Nút "Thêm" (trong card hồng) */
+.main-products .kpi-card:not(.kpi-card + .kpi-card) .btn-primary {
+	background-color: #e73c7e !important; /* Hồng "cháy" */
+	border-color: #e73c7e !important;
+	font-weight: 600;
+}
+
+/* Nút "Lọc" (trong card xanh) */
+.main-products .kpi-card + .kpi-card .btn-secondary {
+	background-color: #23a6d5 !important; /* Xanh "cháy" */
+	border-color: #23a6d5 !important;
+	font-weight: 600;
+}
+
+/* ================================================================== */
+/* 23. (FIX CUỐI) - "HẠ GỤC" BẢNG TRẮNG (DÙNG !important)
+/* ================================================================== */
+
+/* Header bảng (ID, Ảnh, Tên,...) */
+.recent-orders-card .table thead {
+	background: #e73c7e !important; /* Màu hồng đậm "CHÁY" */
+	color: #ffffff;
+}
+
+/* Bỏ màu nền mặc định của hàng (kể cả table-striped) */
+.recent-orders-card .table tbody tr {
+	background-color: transparent !important;
+	color: #333;
+	font-weight: 500;
+	transition: all 0.2s ease-in-out;
+}
+
+/* Hover (giữ nguyên) */
+.recent-orders-card .table-hover tbody tr:hover {
+	background-color: rgba(231, 60, 126, 0.15) !important;
+	transform: scale(1.015);
+	box-shadow: 0 4px 15px rgba(231, 60, 126, 0.2);
+	border-radius: 8px;
+}
+
+/* ================================================================== */
+/* 24. (FIX CUỐI) - "HẠ GỤC" CÁC NÚT OUTLINE (DÙNG !important)
+/* ================================================================== */
+
+.product-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	vertical-align: middle;
+}
+.product-actions .btn:hover {
+	transform: scale(1.1);
+	opacity: 0.9;
+}
+
+/* "Nhuộm" từng nút (dùng !important để CHIẾN THẮNG) */
+.product-actions .btn.btn-outline-primary {
+	background-color: #23a6d5 !important; /* Sửa (Xanh biển) */
+	color: #ffffff !important;
+	border: 0;
+}
+.product-actions .btn.btn-outline-warning {
+	background-color: #ffc107 !important; /* Biến thể (Vàng) */
+	color: #333 !important;
+	border: 0;
+}
+.product-actions .btn.btn-outline-secondary {
+	background-color: #6c757d !important; /* Thuộc tính (Xám) */
+	color: #ffffff !important;
+	border: 0;
+}
+.product-actions .btn.btn-outline-danger {
+	background-color: #dc3545 !important; /* Ẩn (Đỏ) */
+	color: #ffffff !important;
+	border: 0;
+}
+.product-actions .btn.btn-outline-success {
+	background-color: #198754 !important; /* Hiện (Xanh lá) */
+	color: #ffffff !important;
+	border: 0;
+}
+
+/* ================================================================== */
+/* 25. (GIỮ NGUYÊN) CẢNH BÁO LỖI (MÀU ĐỎ MỜ)
+/* ================================================================== */
+.glass-alert.alert-danger {
+	background: rgba(220, 53, 69, 0.25); /* Nền đỏ mờ */
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(220, 53, 69, 0.3);
+	color: #a51e2e; /* Chữ đỏ đậm */
+	font-weight: 600;
+	box-shadow: 0 4px 15px rgba(220, 53, 69, 0.1);
+}
+.glass-alert.alert-danger li {
+	text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* ================================================================== */
+/* 26. (GIỮ NGUYÊN) STYLE PHÂN TRANG (PAGINATION)
+/* ================================================================== */
+.pagination-glass .page-item {
+	margin: 0 2px;
+}
+.pagination-glass .page-link {
+	border: 0;
+	border-radius: 8px; 
+	font-weight: 600;
+	background: rgba(231, 60, 126, 0.1);
+	border: 1px solid rgba(231, 60, 126, 0.2);
+	color: #e73c7e;
+	backdrop-filter: none;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease-in-out;
+}
+.pagination-glass .page-link:hover {
+	background: rgba(231, 60, 126, 0.2);
+	transform: translateY(-2px);
+}
+.pagination-glass .page-item.active .page-link {
+	background-color: #e73c7e;
+	color: #ffffff;
+	border-color: #e73c7e;
+	box-shadow: 0 5px 15px rgba(231, 60, 126, 0.4);
+	transform: translateY(-2px);
+}
+.pagination-glass .page-item.disabled .page-link {
+	background: rgba(0, 0, 0, 0.05);
+	color: #aaa;
+	box-shadow: none;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+}
+/* ================================================================== */
+/* 23. (FIX V3) - "NHUỘM MÀU" BẢNG (HẾT TRẮNG!)
+/* ================================================================== */
+
+/* Header bảng (ID, Ảnh, Tên,...) - "Búa tạ" vào <th> */
+.recent-orders-card .table thead th {
+	background: #e73c7e !important; /* Màu hồng đậm "CHÁY" */
+	color: #ffffff !important;
+	border-color: #e73c7e !important; /* Thêm viền cho chắc */
+	/* Bỏ viền mặc định của Bootstrap */
+	border-bottom-width: 0 !important;
+}
+
+/* Bỏ màu nền 'transparent' cũ */
+.recent-orders-card .table tbody tr {
+	color: #333;
+	font-weight: 500;
+	transition: all 0.2s ease-in-out;
+	/* Viền mờ màu hồng */
+	border-color: rgba(231, 60, 126, 0.1); 
+}
+
+/* === "MA THUẬT" SỌC PASTEL === */
+/* Hàng lẻ (1, 3, 5...) */
+.recent-orders-card .table tbody tr:nth-child(odd) {
+	/* Lấy màu nền của card (tím nhạt) */
+	background-color: #f8f7ff !important; 
+}
+
+/* Hàng chẵn (2, 4, 6...) */
+.recent-orders-card .table tbody tr:nth-child(even) {
+	/* Lấy màu nền của card "Thêm" (hồng nhạt) */
+	background-color: #fff0f5 !important;
+}
+
+/* Hover (LÀM ĐẬM HƠN) */
+.recent-orders-card .table-hover tbody tr:hover {
+	/* Nền hồng đậm hơn (tăng từ 0.15 lên 0.25) */
+	background-color: rgba(231, 60, 126, 0.25) !important;
+	transform: scale(1.015);
+	box-shadow: 0 4px 15px rgba(231, 60, 126, 0.2);
+	border-radius: 8px;
+}
+
+/* ================================================================== */
+/* 23. (FIX V3) - "NHUỘM MÀU" BẢNG (HẾT TRẮNG!)
+/* ================================================================== */
+
+/* Header bảng (ID, Ảnh, Tên,...) - "Búa tạ" vào <th> */
+.recent-orders-card .table thead th {
+	background: #e73c7e !important; /* Màu hồng đậm "CHÁY" */
+	color: #ffffff !important;
+	border-color: #e73c7e !important; /* Thêm viền cho chắc */
+	/* Bỏ viền mặc định của Bootstrap */
+	border-bottom-width: 0 !important;
+}
+
+/* Bỏ màu nền 'transparent' cũ */
+.recent-orders-card .table tbody tr {
+	color: #333;
+	font-weight: 500;
+	transition: all 0.2s ease-in-out;
+	/* Viền mờ màu hồng */
+	border-color: rgba(231, 60, 126, 0.1); 
+}
+
+/* === "MA THUẬT" SỌC PASTEL === */
+/* Hàng lẻ (1, 3, 5...) */
+.recent-orders-card .table tbody tr:nth-child(odd) {
+	/* Lấy màu nền của card (tím nhạt) */
+	background-color: #f8f7ff !important; 
+}
+
+/* Hàng chẵn (2, 4, 6...) */
+.recent-orders-card .table tbody tr:nth-child(even) {
+	/* Lấy màu nền của card "Thêm" (hồng nhạt) */
+	background-color: #fff0f5 !important;
+}
+
+/* Hover (LÀM ĐẬM HƠN) */
+.recent-orders-card .table-hover tbody tr:hover {
+	/* Nền hồng đậm hơn (tăng từ 0.15 lên 0.25) */
+	background-color: rgba(231, 60, 126, 0.25) !important;
+	transform: scale(1.015);
+	box-shadow: 0 4px 15px rgba(231, 60, 126, 0.2);
+	border-radius: 8px;
+}
+
+/* ================================================================== */
+/* 27. STYLE TRANG "HỒ SƠ SHOP"
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-shop-profile) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* NÚT "QUẢN LÝ NHÂN VIÊN" (XANH LÁ) */
+.main-shop-profile .btn-success {
+	background-color: #198754 !important;
+	border-color: #198754 !important;
+	color: #ffffff !important;
+	font-weight: 600;
+	transition: all 0.2s ease;
+}
+.main-shop-profile .btn-success:hover {
+	background-color: #157347 !important;
+	border-color: #146c43 !important;
+	transform: scale(1.05);
+}
+
+/* TÔ MÀU 2 CARD GIỐNG TRANG PRODUCTS */
+/* Card 1 (Hồ sơ) - Nền hồng pastel */
+.main-shop-profile .kpi-card {
+	background: #fff0f5; /* Màu "LavenderBlush" (hồng siêu nhạt) */
+}
+
+/* Card 2 (Thêm NV) - Nền xanh pastel */
+.main-shop-profile .kpi-card + .card {
+	background: #f0faff; /* Màu "AliceBlue" (xanh siêu nhạt) */
+}
+
+/* TÔ MÀU CÁC NÚT TRONG 2 CARD */
+
+/* Nút "Lưu thay đổi" (trong card hồng) */
+.main-shop-profile .kpi-card:not(.kpi-card + .card) .btn-primary {
+	background-color: #e73c7e !important; /* Hồng "cháy" */
+	border-color: #e73c7e !important;
+	font-weight: 600;
+}
+
+/* Nút "Hủy" (trong card hồng) */
+.main-shop-profile .kpi-card:not(.kpi-card + .card) .btn-secondary {
+	background-color: #6c757d !important; /* Xám */
+	border-color: #6c757d !important;
+	color: #ffffff !important;
+	font-weight: 600;
+}
+
+/* Nút "Thêm" (trong card xanh) */
+/* (Nút này đã được style ở ".main-shop-profile .btn-success" bên trên) */
+
+
+/* ================================================================== */
+/* 28. STYLE TRANG "THỐNG KÊ"
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-statistics) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* TÔ MÀU 3 KHU VỰC */
+/* Card 1 (Lọc) - Nền xanh pastel */
+.main-statistics .filter-card-stats {
+	background: #f0faff; /* Màu "AliceBlue" (xanh siêu nhạt) */
+}
+
+/* Card 2 (Doanh thu) - Nền hồng pastel */
+.main-statistics .revenue-card-stats {
+	background: #fff0f5; /* Màu "LavenderBlush" (hồng siêu nhạt) */
+}
+/* Card 3 (Sản phẩm) - Nền tím pastel (ăn theo CSS cũ) */
+
+/* NÚT "ÁP DỤNG" (TRONG CARD LỌC) */
+.main-statistics .filter-card-stats .btn-secondary {
+	background-color: #23a6d5 !important; /* Xanh "cháy" */
+	border-color: #23a6d5 !important;
+	color: #ffffff !important;
+	font-weight: 600;
+}
+
+/* "ĐỘ" LẠI THÔNG BÁO TỔNG DOANH THU (MÀU XANH MỜ) */
+.glass-alert.alert-info {
+	background: rgba(13, 202, 240, 0.25); /* Nền xanh mờ */
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(13, 202, 240, 0.3);
+	color: #0a58ca; /* Chữ xanh đậm */
+	font-weight: 600;
+	box-shadow: 0 4px 15px rgba(13, 202, 240, 0.1);
+}
+
+/* Bảng sản phẩm trong trang Thống kê (cho nó "ăn" sọc) */
+.main-statistics .recent-orders-card .table tbody tr:nth-child(odd) {
+	background-color: #f8f7ff !important; /* Tím nhạt */
+}
+.main-statistics .recent-orders-card .table tbody tr:nth-child(even) {
+	background-color: #f0faff !important; /* Xanh nhạt */
+}
+.main-statistics .recent-orders-card .table thead th {
+	background: #23a6d5 !important; /* Header xanh */
+	color: #ffffff !important;
+	border-color: #23a6d5 !important; 
+}
+/* ================================================================== */
+/* 29. STYLE TRANG "BIẾN THỂ SẢN PHẨM"
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-variants) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* NÚT "THÊM" (TRONG CARD HỒNG CỦA TRANG NÀY) */
+.main-variants .kpi-card .btn-primary {
+	background-color: #e73c7e !important; /* Hồng "cháy" */
+	border-color: #e73c7e !important;
+	font-weight: 600;
+}
+
+/* ================================================================== */
+/* 30. STYLE TRANG "THUỘC TÍNH" (FILE TUI BỎ LỠ)
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-attribute) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* "ĐỘ" CẢNH BÁO "THÀNH CÔNG" (XANH LÁ MỜ) */
+.glass-alert.alert-success {
+	background: rgba(25, 135, 84, 0.25); /* Nền xanh lá mờ */
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(25, 135, 84, 0.3);
+	color: #0f5132; /* Chữ xanh đậm */
+	font-weight: 600;
+	box-shadow: 0 4px 15px rgba(25, 135, 84, 0.1);
+}
+
+/* ================================================================== */
+/* 31. STYLE TRANG "SHOP CHAT"
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-chat) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* TÔ MÀU KHUNG CHAT (HỒNG) */
+.main-chat .chat-box-pink {
+	background: #fff0f5; /* Màu "LavenderBlush" (hồng siêu nhạt) */
+}
+
+/* TÔ MÀU KHUNG NHẬP LIỆU (XANH) */
+.main-chat .chat-form-blue {
+	background: #f0faff; /* Màu "AliceBlue" (xanh siêu nhạt) */
+}
+
+/* NÚT "GỬI" (TRONG CARD XANH) */
+.main-chat .chat-form-blue .btn-secondary {
+	background-color: #23a6d5 !important; /* Xanh "cháy" */
+	border-color: #23a6d5 !important;
+	color: #ffffff !important;
+	font-weight: 600;
+}
+
+/* GIÃN DÒNG CHAT (MÀ TUI XÓA CỦA BRO Ở <STYLE>) */
+#chatBox > div {
+    margin-bottom: 6px;
+    /* Thêm tí "hiệu ứng" cho tin nhắn */
+    animation: slideInUp 0.3s ease-out;
+}
+/* ================================================================== */
+/* 32. STYLE TRANG "QUẢN LÝ NHÂN VIÊN"
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-staffs) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* CARD "ADD STAFF" (NỀN XANH PASTEL) */
+.main-staffs .kpi-card {
+	background: #f0faff; /* Màu "AliceBlue" (xanh siêu nhạt) */
+}
+
+/* NÚT "ADD STAFF" (XANH "CHÁY") */
+.main-staffs .kpi-card .btn-secondary {
+	background-color: #23a6d5 !important; /* Xanh "cháy" */
+	border-color: #23a6d5 !important;
+	color: #ffffff !important;
+	font-weight: 600;
+}
+
+/* ================================================================== */
+/* 33. STYLE TRANG "DANH BẠ VENDOR" (PUBLIC)
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-vendors) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* ================================================================== */
+/* 34. "ĐỘ" FORM LỌC TRANG VENDOR
+/* ================================================================== */
+
+/* Nhuộm xanh card Lọc */
+.main-vendors .vendor-filter-card {
+	background: #f0faff; /* AliceBlue */
+}
+
+/* Style nút "Tìm" (primary) -> Hồng "cháy" */
+.main-vendors .vendor-filter-card .btn-primary {
+	background-color: #e73c7e !important;
+	border-color: #e73c7e !important;
+	font-weight: 600;
+}
+
+/* Style nút "Xóa lọc" (secondary) -> Xám "cháy" */
+.main-vendors .vendor-filter-card .btn-secondary {
+	background-color: #6c757d !important;
+	border-color: #6c757d !important;
+	color: #ffffff !important;
+	font-weight: 600;
+}
+
+/* Style input (ăn theo CSS cũ) */
+.main-vendors .vendor-filter-card .form-control,
+.main-vendors .vendor-filter-card .form-select {
+	background-color: rgba(255, 255, 255, 0.7) !important;
+	border: 1px solid rgba(0, 0, 0, 0.1) !important;
+	color: #333;
+	font-weight: 500;
+	box-shadow: none;
+}
+.main-vendors .vendor-filter-card .form-control:focus,
+.main-vendors .vendor-filter-card .form-select:focus {
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 10px rgba(231, 60, 126, 0.3) !important;
+}
+
+/* ================================================================== */
+/* 35. "TUYỆT TRẦN" MAKEOVER CHO VENDOR CARD (THAY THẾ <STYLE> CŨ)
+/* ================================================================== */
+
+/* 1. Lớp "vỏ" 3D (cho hiệu ứng tilt) */
+.card-3d-hover {
+	/* Cho phép con quay 3D */
+	transform-style: preserve-3d;
+	/* Tốc độ quay 3D */
+	transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* 2. Thân Card (Nền tảng của sự "tuyệt trần") */
+.vendor-card {
+	border: none;
+	border-radius: 12px; /* Bo góc mạnh hơn */
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+	transition: box-shadow 0.4s ease;
+	position: relative; /* Rất quan trọng cho viền gradient */
+	background-color: #ffffff !important; /* Đảm bảo nền trắng */
+	overflow: hidden; /* Ẩn viền gradient khi chưa hover */
+}
+
+/* 3. VIỀN GRADIENT "MA THUẬT" (Hiệu ứng "cháy" nhất!) */
+.vendor-card::before {
+	content: '';
+	position: absolute;
+	top: 0; left: 0; right: 0; bottom: 0;
+	border: 3px solid transparent; /* Viền trong suốt */
+	
+	/* Dùng lại gradient "cháy" của navbar */
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	/* Chỉ tô viền, không tô nền */
+	background-clip: padding-box; 
+	border-radius: 12px;
+	z-index: 0;
+	opacity: 0; /* Ẩn viền đi */
+	
+	/* Dùng animation "gradient-animation" đã có */
+	animation: gradient-animation 15s ease infinite;
+	transition: opacity 0.4s ease;
+}
+
+/* 4. HIỆU ỨNG TỔNG HỢP KHI HOVER */
+.card-3d-hover:hover {
+	/* Hiệu ứng 3D Tilt (nghiêng card) */
+	transform: perspective(1000px) rotateY(3deg) scale(1.03);
+}
+
+.card-3d-hover:hover .vendor-card {
+	/* Hiệu ứng Glow (phát sáng) */
+	box-shadow: 0 10px 30px rgba(231, 60, 126, 0.3); /* Glow màu hồng */
+}
+
+.card-3d-hover:hover .vendor-card::before {
+	/* Hiện viền gradient "ma thuật" */
+	opacity: 1;
+}
+
+/* 5. "ĐỘ" LẠI COVER & LOGO (Code cũ của bro + hiệu ứng) */
+.vendor-card .cover-container {
+	height: 120px;
+	position: relative;
+}
+.vendor-card .cover {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.4s ease;
+}
+.vendor-card:hover .cover {
+	transform: scale(1.1); /* Phóng to cover khi hover */
+}
+
+.vendor-card .logo {
+	width: 72px;
+	height: 72px;
+	object-fit: cover;
+	border: 3px solid #fff;
+	position: absolute;
+	left: 1rem;
+	bottom: -36px;
+	border-radius: 50%;
+	z-index: 10;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	/* Hiệu ứng "nảy" (bounce) */
+	transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.vendor-card:hover .logo {
+	transform: scale(1.1) rotate(-5deg); /* "Nảy" logo lên */
+}
+
+.vendor-card .card-body {
+	padding-top: 2.5rem; 
+	z-index: 1; /* Đảm bảo nội dung card nổi lên trên viền */
+}
+.line-clamp-2 {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+/* 6. NÚT "CHI TIẾT" (TÔ HỒNG & THÊM "PULSE") */
+.vendor-card .btn-primary {
+	background-color: #e73c7e !important;
+	border-color: #e73c7e !important;
+	font-weight: 600;
+	
+	/* Dùng animation "pulse-primary" đã có */
+	animation: pulse-primary 2.5s infinite;
+}
+
+/* ================================================================== */
+/* 36. HIỆU ỨNG TẢI TRANG "NỐI ĐUÔI" (STAGGERED)
+/* ================================================================== */
+
+.product-card-animation {
+	/* Dùng keyframe "slideInUp" đã có */
+	animation: slideInUp 0.6s ease-out;
+	animation-fill-mode: backwards; /* Giữ trạng thái "ẩn" trước khi chạy */
+}
+
+/* Hiệu ứng nối đuôi (Stagger) cho 12 card đầu tiên */
+.main-vendors .row .col:nth-child(1) .product-card-animation { animation-delay: 0.1s; }
+.main-vendors .row .col:nth-child(2) .product-card-animation { animation-delay: 0.15s; }
+.main-vendors .row .col:nth-child(3) .product-card-animation { animation-delay: 0.2s; }
+.main-vendors .row .col:nth-child(4) .product-card-animation { animation-delay: 0.25s; }
+.main-vendors .row .col:nth-child(5) .product-card-animation { animation-delay: 0.3s; }
+.main-vendors .row .col:nth-child(6) .product-card-animation { animation-delay: 0.35s; }
+.main-vendors .row .col:nth-child(7) .product-card-animation { animation-delay: 0.4s; }
+.main-vendors .row .col:nth-child(8) .product-card-animation { animation-delay: 0.45s; }
+.main-vendors .row .col:nth-child(9) .product-card-animation { animation-delay: 0.5s; }
+.main-vendors .row .col:nth-child(10) .product-card-animation { animation-delay: 0.55s; }
+.main-vendors .row .col:nth-child(11) .product-card-animation { animation-delay: 0.6s; }
+.main-vendors .row .col:nth-child(12) .product-card-animation { animation-delay: 0.65s; }
+
+/* ================================================================== */
+/* 37. STYLE TRANG "CHI TIẾT SẢN PHẨM" (PUBLIC 11/10)
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-product-detail) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* ================================================================== */
+/* 38. "ĐỘ" KHỐI SẢN PHẨM CHÍNH (NỀN HỒNG)
+/* ================================================================== */
+
+.main-product-detail .product-detail-card {
+	background: #fff0f5; /* Màu "LavenderBlush" (hồng siêu nhạt) */
+}
+
+/* ẢNH SẢN PHẨM "GLOW" (PHÁT SÁNG) */
+.main-image-glow {
+	position: relative;
+	border-radius: 0.375rem; /* Giống .rounded */
+}
+.main-image-glow .main-img {
+	/* Hiệu ứng 3D */
+	transform: perspective(1000px) rotateY(-3deg);
+	transition: transform 0.4s ease;
+	box-shadow: -10px 10px 30px rgba(0, 0, 0, 0.1);
+}
+.main-image-glow:hover .main-img {
+	transform: perspective(1000px) rotateY(0deg) scale(1.02);
+}
+/* Lớp "Glow" màu hồng */
+.main-image-glow::before {
+	content: '';
+	position: absolute;
+	top: -5%; left: -5%;
+	width: 110%; height: 110%;
+	background: linear-gradient(45deg, #e73c7e, #ee7752);
+	filter: blur(50px);
+	opacity: 0.3;
+	z-index: 0;
+	border-radius: 50%;
+	animation: gradient-animation 10s ease infinite;
+}
+
+/* THUMBNAIL (ẢNH NHỎ) "MA THUẬT" */
+.thumb-gallery .thumb {
+	width: 96px;
+	height: 96px;
+	object-fit: cover;
+	cursor: pointer;
+	border: 3px solid transparent; /* Bỏ border cũ */
+	border-radius: 8px;
+	transition: all 0.3s ease;
+	opacity: 0.7;
+	filter: grayscale(50%);
+}
+.thumb-gallery .thumb:hover {
+	opacity: 1;
+	filter: grayscale(0%);
+	transform: scale(1.05);
+	box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+/* Thumbnail đang được chọn (active) */
+.thumb-gallery .thumb.active {
+	opacity: 1;
+	filter: grayscale(0%);
+	transform: scale(1.1);
+	/* Viền hồng "cháy" */
+	border-color: #e73c7e;
+	box-shadow: 0 5px 15px rgba(231, 60, 126, 0.4);
+}
+
+/* ================================================================== */
+/* 39. "ĐỘ" KHỐI SHOP, BIẾN THỂ, THUỘC TÍNH (BÊN TRONG CARD HỒNG)
+/* ================================================================== */
+
+/* Khối Shop */
+.shop-info-box.card {
+	background: #f0faff !important; /* Nền xanh pastel */
+	box-shadow: none;
+	border: 1px solid rgba(35, 166, 213, 0.2);
+}
+.shop-logo-small {
+	width: 72px !important;
+	height: 72px !important;
+	border-radius: 50% !important; /* Ép nó tròn */
+}
+
+/* Khối Thuộc tính & Biến thể */
+.attribute-box,
+.variant-box {
+	background: rgba(255, 255, 255, 0.5); /* Nền trắng mờ */
+	border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* "Độ" nút chọn Màu / Size (Ăn theo form cũ) */
+.variant-box .btn-outline-secondary {
+	background-color: rgba(255, 255, 255, 0.7);
+	border-color: rgba(0, 0, 0, 0.1);
+	color: #333;
+	font-weight: 600;
+}
+.variant-box .btn-outline-secondary:hover {
+	background-color: #ffffff;
+}
+/* Nút được CHỌN (active) */
+.variant-box .btn-outline-secondary.active,
+.variant-box .btn-primary {
+	background-color: #e73c7e !important;
+	border-color: #e73c7e !important;
+	color: #ffffff !important;
+	box-shadow: 0 4px 10px rgba(231, 60, 126, 0.3);
+}
+.variant-box .btn-outline-secondary.active input {
+	display: none; /* Ẩn cái radio button */
+}
+
+
+/* NÚT "YÊU THÍCH" & "THÊM VÀO GIỎ" (MÀU HỒNG "CHÁY") */
+.btn-fav-pulse,
+.btn-add-cart-pulse {
+	background-color: #e73c7e !important;
+	border-color: #e73c7e !important;
+	color: #ffffff !important;
+	font-weight: 600;
+	/* Dùng lại animation "pulse-danger" (Mục 3) */
+	animation: pulse-danger 2.5s infinite;
+}
+.btn-fav-pulse[aria-pressed="false"] {
+	/* Khi chưa thích (outline) */
+	background-color: transparent !important;
+	border-color: #e73c7e !important;
+	color: #e73c7e !important;
+	animation: none; /* Bỏ pulse khi chưa thích */
+}
+.btn-fav-pulse:hover {
+	opacity: 0.8;
+}
+
+/* ================================================================== */
+/* 40. "ĐỘ" CÁC KHỐI CARD BÊN DƯỚI (NỀN PASTEL)
+/* ================================================================== */
+
+/* Card "Sản phẩm liên quan" (Xanh nhạt) */
+.main-product-detail .related-products-card {
+	background: #f0faff; /* AliceBlue */
+}
+
+/* Card "Đã xem gần đây" (Tím nhạt) */
+.main-product-detail .recent-view-card {
+	background: #f8f7ff; /* GhostWhite */
+}
+
+/* Card "Đánh giá" (Hồng nhạt) */
+.main-product-detail .review-card {
+	background: #fff0f5; /* LavenderBlush */
+}
+/* Card "Bình luận" (Xanh nhạt) */
+.main-product-detail .comment-card {
+	background: #f0faff; /* AliceBlue */
+}
+
+/* "ĐỘ" FORM TRONG CÁC CARD (FORM ĐÁNH GIÁ, BÌNH LUẬN) */
+.review-form-box,
+.comment-form-box {
+	background: rgba(255, 255, 255, 0.5); /* Nền trắng mờ */
+	border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* "Độ" Input/Textarea trong các card này (ăn theo CSS cũ) */
+.kpi-card .form-control,
+.kpi-card .form-select {
+	background-color: rgba(255, 255, 255, 0.7) !important;
+	border: 1px solid rgba(0, 0, 0, 0.1) !important;
+	color: #333;
+	font-weight: 500;
+	box-shadow: none;
+}
+.kpi-card .form-control:focus,
+.kpi-card .form-select:focus {
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 10px rgba(231, 60, 126, 0.3) !important;
+}
+
+/* "Độ" nút Gửi/Cập nhật đánh giá, Gửi bình luận */
+.review-card .btn-primary,
+.comment-card .btn-outline-primary {
+	background-color: #e73c7e !important;
+	border-color: #e73c7e !important;
+	color: #ffffff !important;
+	font-weight: 600;
+}
+.comment-card .btn-outline-primary:hover {
+	opacity: 0.8;
+}
+.review-card .btn-outline-danger {
+	font-weight: 600;
+}
+/* ================================================================== */
+/* 41. STYLE TRANG "YÊU THÍCH" (PUBLIC 11/10)
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-favorites) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* ================================================================== */
+/* 42. "ĐỘ" 2 NÚT HEADER (TRANG CHỦ, ĐÃ XEM)
+/* ================================================================== */
+
+/* Nút "Đã xem" (primary) -> Hồng "cháy" */
+.main-favorites .fav-header .btn-primary {
+	background-color: #e73c7e !important;
+	border-color: #e73c7e !important;
+	color: #ffffff !important;
+	font-weight: 600;
+}
+
+/* Nút "Trang chủ" (secondary) -> Xám "cháy" */
+.main-favorites .fav-header .btn-secondary {
+	background-color: #6c757d !important;
+	border-color: #6c757d !important;
+	color: #ffffff !important;
+	font-weight: 600;
+}
+
+/* ================================================================== */
+/* 43. "ĐỘ" LẠI TITLE VÀ GIÁ (ĐÃ BỊ XÓA TRONG <STYLE>)
+/* ================================================================== */
+
+/* Áp dụng cho card 3D (tái sử dụng .vendor-card) */
+.vendor-card .fav-title {
+	font-weight: 600;
+	color: #222;
+	min-height: 2.6em; /* giữ 2 dòng đều nhau */
+	line-height: 1.3;
+	
+	/* Hiệu ứng "gradient text" khi hover (thêm!) */
+	transition: all 0.3s ease;
+}
+/* Khi hover card, "biến hình" title */
+.card-3d-hover:hover .fav-title {
+	background: linear-gradient(-45deg, #e73c7e, #23a6d5);
+	background-size: 200% 200%;
+	animation: gradient-animation 8s ease infinite;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+}
+
+
+.vendor-card .price-block .old {
+	text-decoration: line-through;
+	opacity: .65;
+	font-size: .9rem;
+	margin-left: .25rem;
+}
+.vendor-card .price-block .new {
+	font-weight: 700;
+	font-size: 1.1rem; /* Cho giá to hơn */
+}
+/* Giá giảm (màu đỏ) */
+.vendor-card .price-block .new.text-danger {
+	color: #dc3545 !important;
+	/* Thêm hiệu ứng "chớp" nhẹ cho giá sale */
+	animation: pulse-danger 3s infinite;
+}
+
+/* ================================================================== */
+/* 44. HIỆU ỨNG TẢI TRANG "NỐI ĐUÔI" (CHO TRANG FAVORITES)
+/* ================================================================== */
+
+/* (Dùng lại .product-card-animation từ Mục 36) */
+
+/* Hiệu ứng nối đuôi (Stagger) */
+.main-favorites .row .col:nth-child(1) .product-card-animation { animation-delay: 0.1s; }
+.main-favorites .row .col:nth-child(2) .product-card-animation { animation-delay: 0.15s; }
+.main-favorites .row .col:nth-child(3) .product-card-animation { animation-delay: 0.2s; }
+.main-favorites .row .col:nth-child(4) .product-card-animation { animation-delay: 0.25s; }
+.main-favorites .row .col:nth-child(5) .product-card-animation { animation-delay: 0.3s; }
+.main-favorites .row .col:nth-child(6) .product-card-animation { animation-delay: 0.35s; }
+/* (Copy thêm nếu bro muốn) */
+/* ================================================================== */
+/* 45. STYLE TRANG "ĐĂNG NHẬP" (PUBLIC 11/10)
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-login) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* ================================================================== */
+/* 46. "ĐỘ" LAYOUT TRANG LOGIN (CĂN GIỮA)
+/* ================================================================== */
+
+.main-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 80vh = 80% chiều cao (trừ navbar/footer) */
+  min-height: 80vh; 
+}
+
+/* ================================================================== */
+/* 47. "LOGIN CARD MA THUẬT" (VIỀN GRADIENT & KÍNH MỜ)
+/* ================================================================== */
+
+/* 1. Lớp "vỏ" (Để chứa viền gradient) */
+.login-card-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 12px;
+  overflow: hidden; /* Ẩn viền khi chưa focus */
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  
+  /* Hiệu ứng tải trang (trượt lên) */
+  animation: slideInUp 0.6s ease-out;
+}
+
+/* 2. Viền Gradient "Ma Thuật" (Tái sử dụng Mục 35) */
+.login-card-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border: 3px solid transparent;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  background-clip: padding-box; 
+  border-radius: 12px;
+  z-index: 0;
+  opacity: 0; /* Ẩn viền đi */
+  animation: gradient-animation 15s ease infinite;
+  transition: opacity 0.4s ease;
+}
+
+/* 3. HIỆU ỨNG "TUYỆT TRẦN" KHI FOCUS VÀO FORM */
+/* :focus-within = Khi bất cứ thứ gì BÊN TRONG nó được focus (input) */
+.login-card-wrapper:focus-within {
+  /* "Glow" (phát sáng) màu hồng */
+  box-shadow: 0 10px 30px rgba(231, 60, 126, 0.3);
+  /* "Nâng" card lên */
+  transform: scale(1.02);
+}
+.login-card-wrapper:focus-within::before {
+  /* "Hiện hình" viền gradient "ma thuật" */
+  opacity: 1;
+}
+
+/* 4. Thân Card (Nền "Kính mờ") */
+.login-card.kpi-card {
+  /* Dùng "Kính mờ" (tái sử dụng Mục 16) */
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1) !important;
+  
+  position: relative; /* Nổi lên trên viền */
+  z-index: 1;
+}
+.login-card .card-body {
+  padding: 2rem;
+}
+
+/* ================================================================== */
+/* 48. "ĐỘ" FORM LOGIN (NÚT, INPUT, LINK)
+/* ================================================================== */
+
+/* Input (Nền trắng mờ - tái sử dụng Mục 43) */
+.login-card .form-control {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #333;
+  font-weight: 500;
+  box-shadow: none;
+}
+.login-card .form-control:focus {
+  border-color: #e73c7e !important;
+  box-shadow: 0 0 10px rgba(231, 60, 126, 0.3) !important;
+}
+.login-card .form-label {
+	font-weight: 600;
+	color: #333;
+}
+
+/* Nút "Đăng nhập" (Hồng "cháy" + Pulse - Tái sử dụng Mục 3) */
+.login-card .btn-primary {
+  background-color: #e73c7e !important;
+  border-color: #e73c7e !important;
+  font-weight: 600;
+  padding: 10px; /* Cho nút to hơn */
+  animation: pulse-danger 2.5s infinite; /* "Pulse" màu hồng */
+}
+
+/* Các link (Quên mật khẩu, Đăng ký) */
+.login-card a {
+  color: #e73c7e; /* Màu hồng */
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.login-card a:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+/*
+ * File: recent-view-section.css
+ * Mục đích: Thêm hiệu ứng cho khu vực "Bạn đã xem gần đây"
+ */
+
+/* ================================================================== */
+/* A. CẤU TRÚC VÀ HIỆU ỨNG FADE-IN
+/* ================================================================== */
+/* Cấu trúc cơ bản */
+.recent-grid .card-img-top {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    /* Đảm bảo hình ảnh bo góc */
+    border-top-left-radius: var(--bs-card-border-radius);
+    border-top-right-radius: var(--bs-card-border-radius);
+}
+.recent-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+/* Kích hoạt hiệu ứng Fade-In cho toàn bộ khu vực */
+.magic-section .row {
+    animation: fadeIn 0.8s ease-out;
+}
+.fade-in-element {
+    animation: fadeIn 0.8s ease-out;
+}
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* ================================================================== */
+/* B. HIỆU ỨNG THẺ SẢN PHẨM (recent-card)
+/* ================================================================== */
+
+.recent-card {
+    border: 1px solid rgba(0, 0, 0, 0.05); /* Viền nhẹ */
+    border-radius: 12px; /* Bo góc lớn hơn */
+    overflow: hidden; /* Quan trọng để ảnh không lòi ra */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.recent-card:hover {
+    transform: translateY(-5px); /* Nâng nhẹ */
+    box-shadow: 0 10px 25px rgba(231, 60, 126, 0.2); /* Glow hồng nhẹ */
+}
+
+/* Hiệu ứng phóng to ảnh khi hover */
+.recent-card a img {
+    transition: transform 0.4s ease-in-out;
+}
+.recent-card:hover a img {
+    transform: scale(1.05);
+}
+
+/* Tinh chỉnh nội dung */
+.recent-name {
+    color: #333;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    margin-bottom: 2px;
+}
+
+.recent-price {
+    color: #e73c7e; /* Giá màu hồng nổi bật */
+    font-size: 1.1rem;
+}
+.recent-unit {
+    font-weight: 500;
+    color: #23a6d5 !important; /* Đơn vị (k/triệu) màu xanh */
+}
+
+/* ================================================================== */
+/* C. HIỆU ỨNG GLOW ICON (Empty state)
+/* ================================================================== */
+/* Hiệu ứng thở cho icon khi không có sản phẩm */
+.glow-icon {
+    animation: pulse-outline 2s infinite;
+}
+
+/* Dùng lại keyframe từ web.css */
+@keyframes pulse-outline {
+	0% {
+		box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4);
+	}
+	70% {
+		box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+	}
+}
+/* ================================================================== */
+/* 49. STYLE TRANG "QUÊN MẬT KHẨU" (PUBLIC 11/10)
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-forgot) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* "ĐỘ" LAYOUT TRANG FORGOT (CĂN GIỮA Y CHANG TRANG LOGIN) */
+.main-forgot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 80vh = 80% chiều cao (trừ navbar/footer) */
+  min-height: 80vh; 
+}
+/* ================================================================== */
+/* 50. STYLE TRANG "ĐĂNG KÝ" (PUBLIC 11/10)
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-register) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* "ĐỘ" LAYOUT TRANG REGISTER (CĂN GIỮA Y CHANG TRANG LOGIN) */
+.main-register {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Dùng padding (thay vì min-height) để nó tự co giãn khi form dài */
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+/* "ĐỘ" LẠI CÁI CHỮ HƯỚNG DẪN BÍ MẬT */
+.login-card .form-text {
+	color: #e73c7e; /* Màu hồng "cháy" */
+	font-weight: 500;
+	opacity: 0.9;
+}
+
+/* ================================================================== */
+/* 51. STYLE TRANG "ĐẶT LẠI MẬT KHẨU" (PUBLIC 11/10)
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-reset-password) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* "ĐỘ" LAYOUT TRANG RESET (CĂN GIỮA Y CHANG TRANG LOGIN) */
+.main-reset-password {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 80vh = 80% chiều cao (trừ navbar/footer) */
+  min-height: 80vh; 
+}
+/* ================================================================== */
+/* 52. STYLE TRANG "XÁC MINH OTP" (PUBLIC 11/10)
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-verify) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* "ĐỘ" LAYOUT TRANG VERIFY (CĂN GIỮA Y CHANG TRANG LOGIN) */
+.main-verify {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 80vh = 80% chiều cao (trừ navbar/footer) */
+  min-height: 80vh; 
+}
+
+/* "BIẾN HÌNH" NÚT "GỬI LẠI OTP" THÀNH LINK MÀU HỒNG */
+.login-card .btn-outline-secondary {
+	background: none !important;
+	border: none !important;
+	color: #e73c7e !important; /* Màu hồng "cháy" */
+	font-weight: 600;
+	text-decoration: none;
+	transition: all 0.2s ease;
+	padding: 0 !important; /* Bỏ padding của button */
+	font-size: .875rem; /* Cho nó nhỏ như link "Quên mật khẩu" */
+}
+.login-card .btn-outline-secondary:hover {
+	text-decoration: underline;
+	opacity: 0.8;
+}
+/* ================================================================== */
+/* 53. STYLE TRANG "XÁC MINH OTP (NEW)" (PUBLIC 11/10)
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-verify-otp) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* "ĐỘ" LAYOUT TRANG VERIFY-OTP (CĂN GIỮA Y CHANG TRANG LOGIN) */
+.main-verify-otp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 80vh = 80% chiều cao (trừ navbar/footer) */
+  min-height: 80vh; 
+}
+/* ================================================================== */
+/* 54. STYLE TRANG "GIỎ HÀNG" (PUBLIC 11/10)
+/* ================================================================== */
+
+/* "GỌI HỒN" NỀN PASTEL CHO TRANG NÀY */
+body:has(.main-cart) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* ================================================================== */
+/* 55. "ĐỘ" LẠI BẢNG GIỎ HÀNG (SỌC HỒNG/TÍM 11/10)
+/* ================================================================== */
+
+/* "ĐỘ" LẠI NÚT "CẬP NHẬT" (ĂN THEO .product-actions) */
+/* (Nút "Xoá" tự ăn CSS Mục 24) */
+.main-cart .product-actions .btn.btn-outline-primary {
+	background-color: #23a6d5 !important; /* Xanh biển */
+	color: #ffffff !important;
+	border: 0;
+}
+
+/* "ĐỘ" LẠI Ô INPUT SỐ LƯỢNG (ĂN THEO .kpi-card) */
+.main-cart .recent-orders-card .form-control {
+	background-color: rgba(255, 255, 255, 0.7) !important;
+	border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* "ĐỘ" LẠI HEADER BẢNG (HỒNG "CHÁY") */
+.main-cart .recent-orders-card .table thead th {
+	background: #e73c7e !important;
+	color: #ffffff !important;
+	border-color: #e73c7e !important;
+	border-bottom-width: 0 !important;
+}
+
+/* "ĐỘ" LẠI SỌC PASTEL (HỒNG/TÍM) */
+.main-cart .recent-orders-card .table tbody tr:nth-child(odd) {
+	background-color: #f8f7ff !important; /* Tím nhạt */
+}
+.main-cart .recent-orders-card .table tbody tr:nth-child(even) {
+	background-color: #fff0f5 !important; /* Hồng nhạt */
+}
+.main-cart .recent-orders-card .table-hover tbody tr:hover {
+	background-color: rgba(231, 60, 126, 0.25) !important;
+	transform: scale(1.015);
+	box-shadow: 0 4px 15px rgba(231, 60, 126, 0.2);
+	border-radius: 8px;
+}
+.main-cart .recent-orders-card .table a {
+	color: #333;
+	font-weight: 600;
+	text-decoration: none;
+}
+.main-cart .recent-orders-card .table a:hover {
+	color: #e73c7e;
+	text-decoration: underline;
+}
+
+/* "ĐỘ" LẠI DÒNG TỔNG CỘNG (FOOTER BẢNG) */
+.main-cart .recent-orders-card .table tfoot th {
+	font-size: 1.2rem;
+	font-weight: 700;
+	color: #e73c7e;
+	background-color: #fff0f5 !important; /* Hồng nhạt */
+}
+
+/* ================================================================== */
+/* 56. "ĐỘ" LẠI NÚT "ĐẶT HÀNG" (HỒNG "CHÁY")
+/* ================================================================== */
+.main-cart .btn-primary {
+	background-color: #e73c7e !important;
+	border-color: #e73c7e !important;
+	font-weight: 600;
+	/* Dùng lại animation "pulse-danger" (Mục 3) */
+	animation: pulse-danger 2.5s infinite;
+}
+.main-cart .btn-primary.btn-lg {
+	padding: 12px 24px;
+	font-size: 1.1rem;
+}
+
+/* ================================================================== */
+/* 57. "ĐỘ" LẠI MODAL XÁC NHẬN XOÁ (KÍNH MỜ 11/10)
+/* ================================================================== */
+
+/* Lớp phủ (giữ nguyên) */
+.cart-modal-wrapper .cm-overlay {
+    position: fixed; inset: 0;
+    display: none; align-items: center; justify-content: center;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(5px); /* Tăng độ mờ "Kính" */
+    z-index: 1050;
+    transition: opacity .2s ease;
+}
+.cart-modal-wrapper .cm-overlay.show {
+    display: flex;
+    animation: cm-fadeIn .25s ease forwards;
+}
+
+/* Khung Modal (ĐỘ LẠI) */
+.cart-modal-wrapper .cm-modal {
+    width: min(480px, 90vw);
+    /* DÙNG "KÍNH MỜ" (Tái sử dụng Mục 16) */
+    background: rgba(255, 255, 255, 0.7) !important;
+	backdrop-filter: blur(15px) !important;
+	border: 1px solid rgba(255, 255, 255, 0.2) !important;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2) !important;
+	
+    border-radius: 14px;
+    overflow: hidden;
+    animation: cm-scaleUp .22s ease;
+}
+
+/* Header Modal (ĐỘ LẠI) */
+.cart-modal-wrapper .cm-header {
+    padding: 16px 20px;
+    /* DÙNG GRADIENT "CHÁY" (Tái sử dụng Mục 1) */
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient-animation 15s ease infinite;
+    
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.05rem;
+    display: flex; align-items: center; gap: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Body Modal (ĐỘ LẠI) */
+.cart-modal-wrapper .cm-body {
+    padding: 18px 22px;
+    background: transparent; /* "Kính mờ" */
+    color: #333;
+    font-weight: 500;
+}
+.cart-modal-wrapper .cm-body strong {
+    color: #e73c7e; /* Màu hồng "cháy" */
+    font-weight: 700;
+}
+
+/* Footer Modal (ĐỘ LẠI) */
+.cart-modal-wrapper .cm-footer {
+    padding: 14px 20px;
+    background: rgba(255, 255, 255, 0.5); /* Nền "Kính" */
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Nút Modal (ĐỘ LẠI) */
+.cart-modal-wrapper .cm-btn {
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 600; /* Tăng độ đậm */
+    cursor: pointer;
+    transition: all .2s ease;
+}
+.cart-modal-wrapper .cm-btn:hover { transform: scale(1.05); }
+.cart-modal-wrapper .cm-btn:active { transform: scale(0.98); }
+
+/* Nút Huỷ (Xám) */
+.cart-modal-wrapper .cm-btn-cancel {
+    background: #6c757d; /* Xám "cháy" */
+    color: #fff;
+}
+.cart-modal-wrapper .cm-btn-cancel:hover { background: #5c666e; }
+
+/* Nút Xoá (Đỏ "cháy") */
+.cart-modal-wrapper .cm-btn-danger {
+    background: #e73c7e; /* Hồng/Đỏ "cháy" */
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(231, 60, 126, 0.4); /* Glow hồng */
+}
+.cart-modal-wrapper .cm-btn-danger:hover { background: #d63384; }
+
+/* ================================================================== */
+/* 58. HIỆU ỨNG HEADER "TUYỆT TRẦN" (PHÌNH TO/THU NHỎ)
+/* ================================================================== */
+
+/* 1. Trạng thái mặc định (thu nhỏ) */
+.navbar-colorful {
+	/* Thêm "transition" để co giãn "mượt" 11/10 */
+	/* (Ghi đè lại cái "py-2" bro thêm ở Bước 10) */
+	padding-top: 0.5rem !important;
+	padding-bottom: 0.5rem !important;
+	transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* 2. Trạng thái "phình to" (khi ở trên đỉnh) */
+.navbar-colorful.navbar-big {
+	min-height: 130px; /* Chiều cao "khủng" 130px bro muốn */
+	padding-top: 1rem !important;
+	padding-bottom: 1rem !important;
+}
+
+/* 3. "Phóng to" nội dung bên trong khi "phình to" */
+.navbar-colorful.navbar-big .navbar-brand {
+	font-size: 2.2rem; /* "Bự gấp đôi" */
+}
+.navbar-colorful.navbar-big .navbar-logo {
+	height: 50px; /* "Bự gấp đôi" */
+}
+.navbar-colorful.navbar-big .nav-link {
+	font-size: 1.4rem; /* "Bự gấp đôi" */
+}
+.navbar-colorful.navbar-big .btn {
+	font-size: 1.1rem; /* Nút cũng "bự" hơn */
+	padding: 0.5rem 1rem;
+}
+
+/* 4. Sửa lại hiệu ứng "Magic" Nav-link (Mục 2) cho "bự" hơn */
+.navbar-colorful.navbar-big .nav-link {
+	padding-bottom: 12px !important; /* Tăng khoảng cách cho gạch chân */
+}
+.navbar-colorful.navbar-big .nav-link::after {
+	height: 4px; /* Gạch chân dày hơn */
+	bottom: 2px;
+}
+
+
+/* ================================================================== */
+/* 59. HIỆU ỨNG "CÁNH GÀ" BAY LƯỢN (TUYỆT TRẦN)
+/* ================================================================== */
+
+/* 1. Style 2 "cánh gà" */
+.floating-wings-left,
+.floating-wings-right {
+	position: fixed; /* Bay lượn và đi theo khi cuộn */
+	top: 150px; /* Khoảng cách từ đỉnh (dưới navbar) */
+	width: 200px; /* Độ rộng của "cánh" */
+	z-index: 0; /* Nằm sau content, nhưng trên background */
+	opacity: 0.7; /* Hơi mờ cho "ảo" */
+}
+.floating-wings-left {
+	left: 20px; /* Khoảng cách từ lề trái */
+}
+.floating-wings-right {
+	right: 20px; /* Khoảng cách từ lề phải */
+}
+
+/* 2. Style các ảnh bên trong "cánh" */
+.floating-wings-left img,
+.floating-wings-right img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	margin-bottom: 1.5rem;
+	
+	/* Thêm hiệu ứng "rung rinh" (animation) */
+	animation: float-wing 8s ease-in-out infinite;
+}
+
+/* 3. Cho 2 "cánh" bay lệch nhịp nhau */
+.floating-wings-right img {
+	animation-delay: -4s; /* Chạy trước 4s */
+}
+
+/* 4. Định nghĩa "rung rinh" */
+@keyframes float-wing {
+	0%   { transform: translateY(0px) rotate(-3deg); }
+	50%  { transform: translateY(20px) rotate(3deg); }
+	100% { transform: translateY(0px) rotate(-3deg); }
+}
+
+/* 5. (RẤT QUAN TRỌNG) Ẩn "cánh gà" trên màn hình nhỏ */
+@media (max-width: 1400px) {
+	/* Ẩn đi khi màn hình hẹp (vì nó sẽ đè lên content) */
+	.floating-wings-left,
+	.floating-wings-right {
+		display: none;
+	}
+}
+/* ================================================================== */
+/* 59. "TUYỆT TRẦN HÓA" VENDOR PRODUCT CARD (THAY THẾ BẢNG)
+/* ================================================================== */
+
+/* 1. "ĐỘ" LẠI ẢNH (GIỐNG HÌNH MẪU) */
+.product-card-img {
+  aspect-ratio: 16 / 10; /* Tỉ lệ (rộng hơn 1:1) */
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+  /* (class "cover" đã có transition zoom từ Mục 35) */
+}
+
+/* 2. "ĐỘ" LẠI TIÊU ĐỀ (GIỐNG .fav-title - Mục 43) */
+.product-card-title {
+  font-weight: 600;
+  color: #222;
+  min-height: 2.6em; 
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Chỉ 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+/* Hiệu ứng "gradient text" khi hover (tái sử dụng) */
+.card-3d-hover:hover .product-card-title {
+  background: linear-gradient(-45deg, #e73c7e, #23a6d5);
+  background-size: 200% 200%;
+  animation: gradient-animation 8s ease infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* 3. "ĐỘ" FOOTER NÚT BẤM (GIỐNG HÌNH MẪU) */
+.product-actions-footer {
+  background-color: #f8f9fa; /* Nền xám nhạt */
+  border-top: 1px solid #eee;
+  
+  /* === "MA THUẬT" ẨN/HIỆN 11/10 === */
+  opacity: 0; /* Ẩn đi */
+  height: 0; /* Biến mất */
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+/* HIỆN FOOTER KHI HOVER CARD "TUYỆT TRẦN" */
+.card-3d-hover:hover .product-actions-footer {
+  opacity: 1;
+  height: auto; /* Hiện ra */
+  padding: 0.75rem !important; /* Trả lại padding */
+}
+
+/* 4. Chia lưới các nút (Sửa, Biến thể,...) */
+.product-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Chia 2 cột */
+  gap: 0.5rem; /* Khoảng cách */
+}
+/* (CSS .product-actions .btn... đã có (Mục 24) sẽ tự "nhuộm" màu 4 nút này) */
+/* (CSS .product-actions-grid kế thừa .product-actions từ file .jsp) */
+/* Ghi đè lại (nếu cần) */
+.product-actions-grid .btn {
+	width: 100%; /* Cho nút full 2 cột */
+}
+
+
+/* ================================================================== */
+/* 60. HIỆU ỨNG TẢI TRANG "NỐI ĐUÔI" (CHO TRANG VENDOR/PRODUCTS)
+/* ================================================================== */
+
+/* (Dùng lại .product-card-animation từ Mục 36) */
+/* Hiệu ứng nối đuôi (Stagger) */
+.main-products .row .col:nth-child(1) .product-card-animation { animation-delay: 0.1s; }
+.main-products .row .col:nth-child(2) .product-card-animation { animation-delay: 0.15s; }
+.main-products .row .col:nth-child(3) .product-card-animation { animation-delay: 0.2s; }
+.main-products .row .col:nth-child(4) .product-card-animation { animation-delay: 0.25s; }
+.main-products .row .col:nth-child(5) .product-card-animation { animation-delay: 0.3s; }
+.main-products .row .col:nth-child(6) .product-card-animation { animation-delay: 0.35s; }
+.main-products .row .col:nth-child(7) .product-card-animation { animation-delay: 0.4s; }
+.main-products .row .col:nth-child(8) .product-card-animation { animation-delay: 0.45s; }
+.main-products .row .col:nth-child(9) .product-card-animation { animation-delay: 0.5s; }
+.main-products .row .col:nth-child(10) .product-card-animation { animation-delay: 0.55s; }

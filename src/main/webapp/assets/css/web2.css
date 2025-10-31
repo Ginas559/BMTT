@@ -1,0 +1,3190 @@
+@charset "UTF-8";
+/*
+ * File: web.css
+ * Mục đích: Thêm hiệu ứng màu mè cho BMTT Shop
+ */
+
+/* ================================================================== */
+/* 1. HIỆU ỨNG NỀN GRADIENT CHUYỂN ĐỘNG (NAVBAR & FOOTER)
+/* ================================================================== */
+
+/* * Định nghĩa chuyển động.
+ * Chúng ta sẽ di chuyển vị trí của một background-size siêu lớn.
+ */
+@keyframes gradient-animation {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+/* Áp dụng cho Navbar */
+.navbar-colorful {
+	/* Tạo dải màu gradient */
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	/* Kích thước nền lớn hơn 400% để có chỗ di chuyển */
+	background-size: 400% 400%;
+	/* Gọi keyframe animation */
+	animation: gradient-animation 15s ease infinite;
+	
+	/* Tinh chỉnh lại chữ trên Navbar */
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Đổi màu chữ navbar-brand và nav-link (do nền đã tối) */
+.navbar-colorful .navbar-brand, 
+.navbar-colorful .nav-link,
+.navbar-colorful .dropdown-toggle {
+	color: #ffffff !important; /* Dùng !important để đè class .navbar-dark của Bootstrap */
+	font-weight: 600;
+}
+
+/* Đổi màu icon Toggler (cái nút 3 gạch) sang màu trắng */
+.navbar-colorful .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+
+/* Áp dụng cho Footer */
+.footer-colorful {
+	background: linear-gradient(-45deg, #23a6d5, #23d5ab, #ee7752, #e73c7e);
+	background-size: 400% 400%;
+	/* Cho footer chạy chậm hơn navbar một chút */
+	animation: gradient-animation 20s ease infinite;
+	color: #ffffff;
+}
+
+/* Đổi màu chữ và link ở footer */
+.footer-colorful span, 
+.footer-colorful a {
+	color: #ffffff !important;
+	font-weight: 500;
+}
+
+/* ================================================================== */
+/* 2. HIỆU ỨNG "MAGIC" HOVER CHO NAV-LINK
+/* ================================================================== */
+
+.navbar-colorful .nav-link {
+	position: relative; /* Cần thiết để định vị pseudo-element ::after */
+	padding-bottom: 8px !important; /* Thêm không gian cho gạch chân */
+}
+
+/* Đây là phần "ma thuật" - cái gạch chân */
+.navbar-colorful .nav-link::after {
+	content: '';
+	position: absolute; /* Đặt nó tuyệt đối so với .nav-link */
+	bottom: 0;
+	left: 50%; /* Bắt đầu từ giữa */
+	transform: translateX(-50%); /* Căn nó ra giữa chuẩn */
+	width: 0%; /* Ban đầu ẩn đi (width = 0) */
+	height: 3px;
+	background-color: #ffffff;
+	border-radius: 2px;
+	transition: width 0.3s ease-in-out; /* Hiệu ứng khi width thay đổi */
+	
+	/* Thêm hiệu ứng glow (phát sáng) cho gạch chân */
+	box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* Khi hover vào .nav-link, cho ::after bung ra */
+.navbar-colorful .nav-link:hover::after,
+.navbar-colorful .nav-link.active::after { /* Cũng áp dụng cho link đang active */
+	width: 80%; /* Bung ra 80% chiều rộng */
+}
+
+
+/* ================================================================== */
+/* 3. HIỆU ỨNG "PULSE" (THỞ) CHO BUTTONS
+/* ================================================================== */
+
+/* Keyframe cho nút Primary (xanh) */
+@keyframes pulse-primary {
+	0% {
+		box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+	}
+	70% {
+		box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+	}
+}
+
+/* Keyframe cho nút Danger (đỏ) */
+@keyframes pulse-danger {
+	0% {
+		box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+	}
+	70% {
+		box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+	}
+}
+
+/* Áp dụng animation */
+.btn-primary {
+	animation: pulse-primary 2s infinite;
+}
+
+.btn-danger {
+	animation: pulse-danger 2s infinite;
+}
+
+/* ================================================================== */
+/* 4. HIỆU ỨNG "SHINE" (VỆT SÁNG) KHI HOVER CHO TẤT CẢ BUTTON
+/* ================================================================== */
+
+.btn {
+	position: relative; /* Cần để chứa vệt sáng */
+	overflow: hidden; /* Ẩn vệt sáng khi nó ở ngoài */
+	transition: transform 0.2s ease; /* Thêm hiệu ứng phóng to nhẹ */
+}
+
+.btn:hover {
+	transform: scale(1.05); /* Phóng to nhẹ khi hover */
+}
+
+/* Đây là vệt sáng */
+.btn::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%; /* Ban đầu giấu bên trái */
+	width: 50%;
+	height: 100%;
+	/* Vệt sáng là 1 dải gradient xéo */
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(255, 255, 255, 0.4),
+		transparent
+	);
+	transform: skewX(-30deg); /* Làm nó xéo đi */
+	transition: left 0.7s cubic-bezier(0.23, 1, 0.32, 1); /* Hiệu ứng di chuyển */
+}
+
+/* Khi hover, di chuyển vệt sáng sang phải */
+.btn:hover::before {
+	left: 150%;
+}
+
+
+/* =S================================================================ */
+/* 5. HIỆU ỨNG FADE-IN CHO NỘI DUNG TRANG
+/* ================================================================== */
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(20px); /* Hơi trượt nhẹ từ dưới lên */
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Áp dụng cho thẻ <main> */
+main.container {
+	animation: fadeIn 0.8s ease-out;
+}
+
+/* ================================================================== */
+/* 6. STYLE CHO LOGO NAVBAR
+/* ================================================================== */
+.navbar-logo {
+	height: 30px; /* Chỉnh chiều cao logo */
+	width: auto;
+	margin-right: 8px; /* Khoảng cách với chữ "BMTT Shop" */
+	border-radius: 4px; /* Bo góc nhẹ cho logo */
+	background-color: rgba(255, 255, 255, 0.2); /* Thêm 1 lớp nền mờ cho đẹp */
+	padding: 2px;
+	
+	/* Hiệu ứng xoay khi hover */
+	transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.navbar-brand:hover .navbar-logo {
+	transform: rotate(-15deg) scale(1.1);
+}
+
+
+/* ================================================================== */
+/* 7. STYLE NÚT "XIN CHÀO" (btn-outline-secondary)
+/* ================================================================== */
+.navbar-colorful .btn-outline-secondary {
+	color: #ffffff; /* Chữ trắng */
+	border-color: rgba(255, 255, 255, 0.7); /* Viền trắng mờ */
+}
+
+/* Đổi màu khi hover cho nó "chất" */
+.navbar-colorful .btn-outline-secondary:hover {
+	color: #0a4a64; /* Chữ màu xanh đậm (hợp với theme) */
+	background-color: #ffffff; /* Nền trắng */
+	border-color: #ffffff;
+}
+
+
+/* ================================================================== */
+/* 8. STYLE "MÀU MÈ" CHO VENDOR DROPDOWN MENU
+/* ================================================================== */
+
+/* Tùy chỉnh cái khung menu */
+.navbar-colorful .dropdown-menu {
+	/* Dùng 1 màu trong dải gradient làm nền */
+	background-color: #23a6d5; /* Màu xanh dương */
+	
+	/* Hoặc bro có thể thử nền gradient này nếu muốn "cháy" hơn */
+	/* background: linear-gradient(135deg, #23a6d5, #23d5ab); */
+
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-radius: 8px; /* Bo góc */
+	margin-top: 8px !important; /* Đẩy nó xuống 1 tí cho đẹp */
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+	
+	/* Thêm hiệu ứng kính mờ (nếu bro thích) */
+	/* backdrop-filter: blur(5px); */
+	/* background-color: rgba(35, 166, 213, 0.8); */
+}
+
+/* Tùy chỉnh các mục con (Dashboard, Sản phẩm,...) */
+.navbar-colorful .dropdown-item {
+	color: #ffffff; /* Chữ trắng */
+	font-weight: 500;
+	padding: 10px 20px;
+	
+	/* Hiệu ứng chuyển động mượt mà */
+	transition: all 0.2s ease-in-out;
+}
+
+/* Hiệu ứng hover "ma thuật" cho các mục con */
+.navbar-colorful .dropdown-item:hover,
+.navbar-colorful .dropdown-item:focus {
+	color: #ffffff;
+	
+	/* Lấy màu hồng trong dải gradient để làm nền hover */
+	background-color: #e73c7e; 
+	
+	/* Hiệu ứng trượt nhẹ sang phải */
+	transform: translateX(5px);
+	
+	/* Tạo 1 cái viền trái phát sáng (tùy chọn) */
+	/* border-left: 4px solid #ee7752; */
+	
+	border-radius: 4px; /* Bo góc luôn cái item khi hover */
+}
+
+
+/* ================================================================== */
+/* 9. TĂNG KÍCH THƯỚC NAVBAR (FONT)
+/* Ghi đè lại 2 class cũ để tăng font-size
+/* ================================================================== */
+
+/* Tăng kích thước chữ "BMTT Shop" */
+.navbar-colorful .navbar-brand {
+	font-size: 1.4rem; /* Tăng từ 1.25rem (mặc định) lên 1.4rem */
+	font-weight: 600;
+}
+
+/* Tăng kích thước các link menu (Sản phẩm, Yêu thích,...) */
+.navbar-colorful .nav-link,
+.navbar-colorful .dropdown-toggle {
+	color: #ffffff !important; 
+	font-weight: 600;
+	font-size: 1.05rem; /* Tăng nhẹ kích thước link */
+}
+
+
+/* ================================================================== */
+/* 10. STYLE CHO FOOTER MỚI "HOÀNH TRÁNG"
+/* ================================================================== */
+
+/* Ghi đè lại class .footer-colorful cũ để tăng padding */
+.footer-colorful {
+	/* Xóa padding cũ đi, thay bằng cái này */
+	padding-top: 3rem; /* ~ 48px */
+	padding-bottom: 0; /* Bỏ padding-bottom vì .footer-bottom sẽ lo */
+	
+	/* Các thuộc tính cũ (gradient, animation) vẫn giữ nguyên */
+	background: linear-gradient(-45deg, #23a6d5, #23d5ab, #ee7752, #e73c7e);
+	background-size: 400% 400%;
+	animation: gradient-animation 20s ease infinite;
+	color: #ffffff;
+}
+
+/* Tiêu đề các cột (Thông tin, Liên lạc,...) */
+.footer-heading {
+	font-weight: 700;
+	color: #ffffff;
+	margin-bottom: 1.25rem;
+	text-transform: uppercase; /* Viết hoa cho "pro" */
+	letter-spacing: 1px;
+	text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Chữ mô tả chung */
+.footer-text {
+	color: rgba(255, 255, 255, 0.85); /* Hơi mờ 1 tí cho dễ đọc */
+	line-height: 1.6;
+}
+
+/* Style cho cột "Thông tin liên lạc" */
+.contact-info {
+	color: rgba(255, 255, 255, 0.85);
+}
+.contact-info li {
+	display: flex;
+	align-items: flex-start; /* Căn trên cùng */
+	margin-bottom: 10px;
+}
+.contact-info i {
+	margin-right: 12px;
+	margin-top: 4px; /* Căn icon với dòng chữ */
+	color: #ffffff; /* Cho icon sáng hơn chữ */
+	font-size: 1.1rem;
+}
+
+/* Đảm bảo map iframe co giãn và đẹp */
+.map-responsive {
+	overflow: hidden;
+	border-radius: 8px; /* Bo góc cái map */
+	border: 2px solid rgba(255, 255, 255, 0.3);
+	box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.map-responsive iframe {
+	display: block; /* Bỏ khoảng trắng thừa bên dưới iframe */
+}
+
+/* Thanh copyright ở dưới cùng */
+.footer-bottom {
+	margin-top: 2rem; /* Tạo khoảng cách với nội dung bên trên */
+	/* Dùng 1 màu tối hơn 1 chút (hoặc trong suốt) */
+	background-color: rgba(0, 0, 0, 0.15); 
+	backdrop-filter: blur(2px); /* Hiệu ứng kính mờ nhẹ */
+}
+
+/* Chữ và link ở thanh copyright */
+.footer-bottom span,
+.footer-bottom a {
+	color: #ffffff !important;
+	font-weight: 500;
+}
+
+.footer-bottom a:hover {
+	text-decoration: underline !important;
+}
+
+
+/* ================================================================== */
+/* 11. STYLE CHO VENDOR DASHBOARD
+/* ================================================================== */
+
+/* Keyframe mới cho hiệu ứng trượt lên */
+@keyframes slideInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Áp dụng animation cho các khối dashboard (staggered - nối tiếp nhau) */
+.main-dashboard .kpi-cards {
+	animation: slideInUp 0.5s ease-out 0.2s; /* Trễ 0.2s */
+	animation-fill-mode: backwards; /* Giữ trạng thái "from" trước khi chạy */
+}
+.main-dashboard .chart-cards {
+	animation: slideInUp 0.5s ease-out 0.4s; /* Trễ 0.4s */
+	animation-fill-mode: backwards;
+}
+.main-dashboard .recent-orders-card {
+	animation: slideInUp 0.5s ease-out 0.6s; /* Trễ 0.6s */
+	animation-fill-mode: backwards;
+}
+
+/* Class tạo chữ gradient */
+.gradient-text {
+	/* Dùng lại dải màu gradient "cháy" của mình */
+	background: linear-gradient(
+		-45deg,
+		#e73c7e,
+		#23a6d5,
+		#23d5ab
+	);
+	background-size: 300% 300%;
+	/* Cho nó chuyển động nhẹ */
+	animation: gradient-animation 10s ease infinite;
+
+	/* Kỹ thuật "cắt" chữ */
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent; /* Fallback */
+}
+
+/* ================================================================== */
+/* 12. HIỆU ỨNG THẺ KPI VÀ CHART
+/* ================================================================== */
+.kpi-card {
+	border: 0; /* Bỏ border mặc định của card */
+	/* Thêm 1 cái viền trong suốt nhẹ */
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.kpi-card:hover {
+	/* Hiệu ứng "nâng" thẻ lên */
+	transform: translateY(-10px);
+	/* Thêm hiệu ứng "phát sáng" (glow) màu hồng */
+	box-shadow: 0 10px 25px rgba(231, 60, 126, 0.3);
+}
+
+/* Đổi màu số liệu KPI (display-6) cho nổi bật */
+.kpi-card .display-6 {
+	font-weight: 700;
+	/* Cho nó 1 màu xanh dương trong theme */
+	color: #23a6d5;
+}
+
+/* Nếu bro muốn số liệu cũng là gradient thì dùng class .gradient-text 
+   (như tui đã thêm ở Bước 1) */
+.kpi-card .display-6.gradient-text {
+	font-weight: 700;
+}
+
+
+/* ================================================================== */
+/* 13. STYLE CHO CÁC NÚT BẤM CÒN LẠI
+/* ================================================================== */
+
+/* Keyframe cho nút Success (Xanh lá) */
+@keyframes pulse-success {
+	0% {
+		box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7);
+	}
+	70% {
+		box-shadow: 0 0 0 10px rgba(25, 135, 84, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(25, 135, 84, 0);
+	}
+}
+/* Keyframe cho nút Outline (Chat) */
+@keyframes pulse-outline {
+	0% {
+		box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4);
+	}
+	70% {
+		box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+	}
+}
+
+/* Áp dụng animation */
+.btn-success {
+	animation: pulse-success 2.5s infinite; /* Cho nó chậm hơn 1 tí */
+}
+.btn-chat {
+	animation: pulse-outline 2s infinite;
+}
+
+/* Nút "Áp dụng" (Filter) */
+.main-dashboard .btn-outline-secondary {
+	border-color: #23a6d5;
+	color: #23a6d5;
+}
+.main-dashboard .btn-outline-secondary:hover {
+	background-color: #23a6d5;
+	color: #ffffff;
+}
+
+/* ================================================================== */
+/* 14. STYLE BẢNG "ĐƠN GẦN ĐÂY"
+/* ================================================================== */
+
+.recent-orders-card .table thead {
+	/* Header bảng dùng gradient "cháy" của navbar */
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient-animation 15s ease infinite;
+	color: #ffffff;
+	border: 0;
+}
+.recent-orders-card .table thead th {
+	color: #ffffff;
+	border: 0;
+}
+
+/* Hiệu ứng hover cho dòng trong bảng */
+.recent-orders-card .table-hover tbody tr:hover {
+	/* Dùng 1 màu hồng rất nhạt */
+	background-color: rgba(231, 60, 126, 0.05);
+	transform: scale(1.01); /* Hơi phóng to nhẹ */
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease-in-out;
+}
+
+/* Thêm "glow" cho các status badge */
+.badge.bg-success {
+	box-shadow: 0 0 10px rgba(25, 135, 84, 0.7);
+}
+.badge.bg-warning {
+	color: #333 !important; /* Chữ tối cho dễ đọc */
+	box-shadow: 0 0 10px rgba(255, 193, 7, 0.7);
+}
+.badge.bg-danger {
+	box-shadow: 0 0 10px rgba(220, 53, 69, 0.7);
+}
+.badge.bg-info {
+	box-shadow: 0 0 10px rgba(13, 202, 240, 0.7);
+}
+.badge.bg-primary {
+	box-shadow: 0 0 10px rgba(13, 110, 253, 0.7);
+}
+/* ================================================================== */
+/* 15. (CẬP NHẬT) NỀN DASHBOARD GIỐNG FOOTER (MÀU NHẸ)
+/* ================================================================== */
+
+body:has(.main-dashboard) {
+	/* * Dải màu pastel MỚI - Lấy màu từ footer nhưng giảm opacity (độ mờ)
+	 * Chúng ta đặt nó lên trên một nền trắng (#ffffff)
+	 */
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* #ee7752 (cam) @ 25% */
+		rgba(231, 60, 126, 0.25), /* #e73c7e (hồng) @ 25% */
+		rgba(35, 166, 213, 0.25), /* #23a6d5 (xanh) @ 25% */
+		rgba(35, 213, 171, 0.25) /* #23d5ab (xanh ngọc) @ 25% */
+	);
+	
+	/* Phải có 1 màu nền trắng bên dưới lớp gradient mờ này */
+	background-color: #ffffff; 
+	
+	background-size: 400% 400%;
+	/* Giữ nguyên tốc độ chạy CỰC KỲ CHẬM để không bị phân tâm */
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* ================================================================== */
+/* 16. (FIX V2) - TÔ MÀU 3 KHU VỰC "XẤU"
+/* ================================================================== */
+
+/* Card 1 (Thêm) - Nền hồng pastel */
+.main-products .kpi-card {
+	background: #fff0f5; /* Màu "LavenderBlush" (hồng siêu nhạt) */
+	border: 0;
+	backdrop-filter: none !important; /* Tắt hẳn kính mờ */
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Card 2 (Lọc) - Nền xanh pastel */
+/* Dùng selector "adjacent sibling" (cái .kpi-card NẰM NGAY SAU .kpi-card) */
+.main-products .kpi-card + .kpi-card {
+	background: #f0faff; /* Màu "AliceBlue" (xanh siêu nhạt) */
+}
+
+/* Card 3 (Bảng) - Nền tím pastel (như cũ) */
+.main-products .recent-orders-card {
+	background: #f8f7ff;
+	border: 0;
+	backdrop-filter: none !important;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Giữ hiệu ứng hover cho cả 3 card */
+.kpi-card:hover,
+.recent-orders-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 10px 25px rgba(231, 60, 126, 0.3);
+}
+
+/* Tiêu đề card (cho đậm) */
+.kpi-card .card-title,
+.recent-orders-card .card-title {
+	color: #333;
+	font-weight: 600;
+}
+
+/* ================================================================== */
+/* 17. (FIX V2) - "HẠ GỤC" INPUTS TRẮNG (DÙNG !important)
+/* ================================================================== */
+.kpi-card .form-control,
+.kpi-card .form-select {
+	/* Nền trắng mờ (để thấy màu card bên dưới) */
+	background-color: rgba(255, 255, 255, 0.7) !important;
+	border: 1px solid rgba(0, 0, 0, 0.1) !important;
+	color: #333;
+	font-weight: 500;
+	box-shadow: none;
+}
+
+.kpi-card .form-control:focus,
+.kpi-card .form-select:focus {
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 10px rgba(231, 60, 126, 0.3) !important;
+}
+
+/* ================================================================== */
+/* 18. (FIX V2) - NÚT "THÊM" VÀ "LỌC" (DÙNG !important)
+/* ================================================================== */
+
+/* Nút "Thêm" (trong card hồng) */
+/* Selector này nghĩa là: .kpi-card KHÔNG PHẢI là cái .kpi-card nằm sau 1 cái .kpi-card khác */
+.main-products .kpi-card:not(.kpi-card + .kpi-card) .btn-primary {
+	background-color: #e73c7e !important; /* Hồng "cháy" */
+	border-color: #e73c7e !important;
+	font-weight: 600;
+}
+
+/* Nút "Lọc" (trong card xanh) */
+.main-products .kpi-card + .kpi-card .btn-secondary {
+	background-color: #23a6d5 !important; /* Xanh "cháy" */
+	border-color: #23a6d5 !important;
+	font-weight: 600;
+}
+
+/* ================================================================== */
+/* 19. (FIX V2) - "HẠ GỤC" BẢNG TRẮNG (DÙNG !important)
+/* ================================================================== */
+
+/* Header bảng (ID, Ảnh, Tên,...) */
+.recent-orders-card .table thead {
+	background: #e73c7e !important; /* Màu hồng đậm "CHÁY" */
+	color: #ffffff;
+}
+
+/* Bỏ màu nền mặc định của hàng (kể cả table-striped) */
+.recent-orders-card .table tbody tr {
+	background-color: transparent !important;
+	color: #333;
+	font-weight: 500;
+	transition: all 0.2s ease-in-out;
+}
+
+/* Hover (giữ nguyên) */
+.recent-orders-card .table-hover tbody tr:hover {
+	background-color: rgba(231, 60, 126, 0.15) !important;
+	transform: scale(1.015);
+	box-shadow: 0 4px 15px rgba(231, 60, 126, 0.2);
+	border-radius: 8px;
+}
+
+/* ================================================================== */
+/* 20. (FIX V2) - "HẠ GỤC" CÁC NÚT OUTLINE (DÙNG !important)
+/* ================================================================== */
+
+.product-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	vertical-align: middle;
+}
+.product-actions .btn:hover {
+	transform: scale(1.1);
+	opacity: 0.9;
+}
+
+/* "Nhuộm" từng nút (dùng !important để CHIẾN THẮNG) */
+.product-actions .btn.btn-outline-primary {
+	background-color: #23a6d5 !important; /* Sửa (Xanh biển) */
+	color: #ffffff !important;
+	border: 0;
+}
+.product-actions .btn.btn-outline-warning {
+	background-color: #ffc107 !important; /* Biến thể (Vàng) */
+	color: #333 !important;
+	border: 0;
+}
+.product-actions .btn.btn-outline-secondary {
+	background-color: #6c757d !important; /* Thuộc tính (Xám) */
+	color: #ffffff !important;
+	border: 0;
+}
+.product-actions .btn.btn-outline-danger {
+	background-color: #dc3545 !important; /* Ẩn (Đỏ) */
+	color: #ffffff !important;
+	border: 0;
+}
+.product-actions .btn.btn-outline-success {
+	background-color: #198754 !important; /* Hiện (Xanh lá) */
+	color: #ffffff !important;
+	border: 0;
+}
+
+/* ================================================================== */
+/* 23. STYLE PHÂN TRANG (PAGINATION) "KÍNH MỜ"
+/* ================================================================== */
+
+.pagination-glass .page-item {
+	margin: 0 2px; /* Tạo khoảng cách nhỏ */
+}
+
+.pagination-glass .page-link {
+	border: 0;
+	border-radius: 8px; /* Bo góc */
+	font-weight: 600;
+	
+	/* Hiệu ứng kính mờ */
+	background: rgba(255, 255, 255, 0.4);
+	backdrop-filter: blur(5px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+	
+	/* Chữ màu hồng pastel */
+	color: #e73c7e;
+	
+	transition: all 0.2s ease-in-out;
+}
+
+/* Khi hover */
+.pagination-glass .page-link:hover {
+	background: rgba(255, 255, 255, 0.7);
+	color: #e73c7e;
+	transform: translateY(-2px);
+}
+
+/* Trang đang được chọn (active) */
+.pagination-glass .page-item.active .page-link {
+	background-color: #e73c7e; /* Nền hồng đậm */
+	color: #ffffff;
+	border-color: #e73c7e;
+	box-shadow: 0 5px 15px rgba(231, 60, 126, 0.4);
+	transform: translateY(-2px);
+}
+
+/* Trang bị vô hiệu hóa (disabled) */
+.pagination-glass .page-item.disabled .page-link {
+	background: rgba(255, 255, 255, 0.2);
+	backdrop-filter: none;
+	color: #aaa;
+	box-shadow: none;
+}
+/*
+ * File: web2.css
+ * Mục đích: Style "Pro Max" cho trang Quản lý Đơn hàng (Vendor Orders)
+ * Phụ thuộc: web.css (v1)
+ */
+
+/* ================================================================== */
+/* 1. NỀN TRANG (GIỐNG DASHBOARD)
+/* ================================================================== */
+
+/* * Dùng :has() để chỉ áp dụng nền này khi body chứa trang 
+ * .main-vendor-orders (class chúng ta đã thêm ở JSP)
+ */
+body:has(.main-vendor-orders) {
+	/* Dùng lại dải màu pastel siêu chậm từ web.css (v1) */
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* Cam */
+		rgba(231, 60, 126, 0.25), /* Hồng */
+		rgba(35, 166, 213, 0.25), /* Xanh */
+		rgba(35, 213, 171, 0.25) /* Xanh ngọc */
+	);
+	
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	
+	/* Dùng lại animation 'gradient-animation' đã định nghĩa ở web.css (v1) */
+	animation: gradient-animation 45s ease infinite;
+}
+
+
+/* ================================================================== */
+/* 2. KHUNG LỌC (FILTER-CARD)
+/* ================================================================== */
+
+/* * Style cho class .filter-card (đã thêm ở JSP)
+ * Giống style .kpi-card (màu xanh) ở web.css (v1)
+ */
+.main-vendor-orders .filter-card {
+	background: #f0faff; /* Màu "AliceBlue" (xanh siêu nhạt) */
+	border: 0;
+	backdrop-filter: none !important;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Hiệu ứng "nâng" lên và "phát sáng" (glow) MÀU XANH */
+.main-vendor-orders .filter-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 10px 25px rgba(35, 166, 213, 0.3); /* Glow xanh */
+}
+
+/* ================================================================== */
+/* 3. INPUTS/SELECTS TRONG KHUNG LỌC
+/* ================================================================== */
+
+/*
+ * "Hạ gục" input/select trắng, giống web.css (v1) (Mục 17)
+ * Làm cho chúng có nền mờ để thấy màu card bên dưới.
+ */
+.main-vendor-orders .filter-card .form-control,
+.main-vendor-orders .filter-card .form-select {
+	background-color: rgba(255, 255, 255, 0.7) !important;
+	border: 1px solid rgba(0, 0, 0, 0.1) !important;
+	color: #333;
+	font-weight: 500;
+	box-shadow: none;
+}
+
+/* Đổi màu focus cho hợp tone xanh */
+.main-vendor-orders .filter-card .form-control:focus,
+.main-vendor-orders .filter-card .form-select:focus {
+	border-color: #23a6d5 !important;
+	box-shadow: 0 0 10px rgba(35, 166, 213, 0.3) !important;
+}
+
+/* ================================================================== */
+/* 4. NÚT "LỌC"
+/* ================================================================== */
+
+/* * "Nhuộm" nút "Lọc" (btn-primary) sang màu xanh "cháy"
+ * Giống web.css (v1) (Mục 18)
+ */
+.main-vendor-orders .filter-card .btn-primary {
+	background-color: #23a6d5 !important; /* Xanh "cháy" */
+	border-color: #23a6d5 !important;
+	font-weight: 600;
+}
+
+/* Nút "Lọc" này cũng sẽ tự động nhận hiệu ứng 'pulse' và 'shine' */
+
+
+/* ================================================================== */
+/* 5. NÂNG CẤP BẢNG CHÍNH
+/* ================================================================== */
+
+/* * Card .recent-orders-card đã tự động nhận style 
+ * từ web.css (v1) (Mục 16, 19).
+ * Chúng ta chỉ cần "hạ gục" cái select cập nhật bên trong nó.
+ */
+
+.main-vendor-orders .recent-orders-card .form-select {
+	background-color: rgba(255, 255, 255, 0.7) !important;
+	border: 1px solid rgba(0, 0, 0, 0.1) !important;
+	font-weight: 500;
+	box-shadow: none;
+}
+
+/* Đổi màu focus cho hợp tone hồng (của header bảng) */
+.main-vendor-orders .recent-orders-card .form-select:focus {
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 10px rgba(231, 60, 126, 0.3) !important;
+}
+
+/* Nút "Lưu" (btn-primary) trong bảng sẽ tự động 
+   nhận hiệu ứng 'pulse-primary' và 'shine' */
+
+
+/* ================================================================== */
+/* 6. NÚT "VỀ DASHBOARD"
+/* ================================================================== */
+
+/* * Style cho nút "Về Dashboard" (btn-outline-secondary)
+ * Giống nút "Áp dụng" (Filter) ở Dashboard (web.css (v1) Mục 13)
+ */
+.main-vendor-orders .btn-outline-secondary {
+	border-color: #23a6d5;
+	color: #23a6d5;
+	font-weight: 600;
+}
+.main-vendor-orders .btn-outline-secondary:hover {
+	background-color: #23a6d5;
+	color: #ffffff;
+}
+
+/* ================================================================== */
+/* 7. MODAL CHI TIẾT "CHÁY"
+/* ================================================================== */
+
+/* Style cho class .modal-colorful (đã thêm ở JSP) */
+.modal-colorful {
+	border: 0;
+	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+	border-radius: 12px; /* Phải bo góc cho modal-content */
+	overflow: hidden; /* Bắt buộc để bo góc header */
+}
+
+.modal-colorful .modal-header {
+	/* Dùng lại dải màu gradient "cháy" của navbar */
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	/* Dùng lại animation 'gradient-animation' */
+	animation: gradient-animation 15s ease infinite;
+	color: #ffffff;
+	border-bottom: 0;
+}
+
+.modal-colorful .modal-title {
+	font-weight: 600;
+	text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Đổi màu nút X sang trắng */
+.modal-colorful .btn-close {
+	filter: brightness(0) invert(1); 
+	opacity: 0.8;
+}
+.modal-colorful .btn-close:hover {
+	opacity: 1;
+}
+
+/* Thêm style cho phần body của modal cho đẹp */
+.modal-colorful .modal-body {
+   background-color: #f8f9fa; /* Nền xám nhạt */
+}
+
+/* Tinh chỉnh nội dung trong modal (nếu là bảng) */
+.modal-colorful .modal-body .table {
+	background-color: #ffffff;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+/*
+ * File: web2.css (PHẦN THÊM)
+ * Mục đích: Fix lỗi "lạc quẻ" của card bảng và tiêu đề
+ */
+
+/* ================================================================== */
+/* 8. (FIX V3) "HẠ GỤC" CARD BẢNG MÀU TRẮNG
+/* ================================================================== */
+
+/* * Lỗi: web.css (v1) chỉ style cho card bảng khi nó nằm trong .main-products.
+ * Trang này là .main-vendor-orders, nên nó bị "lạc quẻ".
+ * Fix: Thêm 1 rule y hệt, nhưng cho trang .main-vendor-orders.
+ */
+.main-vendor-orders .recent-orders-card {
+	background: #f8f7ff; /* Màu tím pastel (giống trang Sản phẩm) */
+	border: 0;
+	backdrop-filter: none !important;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* * Thêm hiệu ứng hover (glow màu hồng) cho đồng bộ
+ * (Vì web.css v1 cũng định nghĩa nó chung với .kpi-card)
+ */
+.main-vendor-orders .recent-orders-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 10px 25px rgba(231, 60, 126, 0.3); /* Glow hồng */
+}
+
+
+/* ================================================================== */
+/* 9. (FIX V3) "HẠ GỤC" TIÊU ĐỀ XANH (Ép nó sang gradient)
+/* ================================================================== */
+/* * Lỗi: Tiêu đề h2 bị Bootstrap đè màu xanh.
+ * Fix: Dùng selector "cụ thể" hơn để ép nó nhận gradient.
+ */
+.main-vendor-orders h2.gradient-text {
+	/* Dùng lại dải màu gradient "cháy" từ web.css (v1) */
+	background: linear-gradient(
+		-45deg,
+		#e73c7e,
+		#23a6d5,
+		#23d5ab
+	);
+	background-size: 300% 300%;
+	/* Dùng lại animation 'gradient-animation' (từ v1) */
+	animation: gradient-animation 10s ease infinite;
+
+	/* Kỹ thuật "cắt" chữ */
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent; /* Fallback */
+	font-weight: 700; /* Đảm bảo nó đậm */
+}
+
+/*
+ * File: web2.css (PHẦN THÊM)
+ * Mục đích: (FIX V4) "HẠ GỤC" BẢNG TRẮNG DO LỖI ƯU TIÊN
+ */
+
+/* ================================================================== */
+/* 10. (FIX V4) ÉP BẢNG NHẬN DIỆN MÀU
+/* ================================================================== */
+
+/* * Dùng selector mạnh hơn (thêm .main-vendor-orders) 
+ * để "đè" lại Bootstrap
+ */
+
+/* Header bảng (Fix lỗi "mất tên cột") */
+.main-vendor-orders .recent-orders-card .table thead {
+	background: #e73c7e !important; /* Màu hồng đậm "CHÁY" (từ v1) */
+	color: #ffffff;
+}
+.main-vendor-orders .recent-orders-card .table thead th {
+	color: #ffffff;
+}
+
+/* Các hàng trong bảng (Fix lỗi "trắng nhiều quá") */
+.main-vendor-orders .recent-orders-card .table tbody tr {
+	background-color: transparent !important; /* TRONG SUỐT -> nhìn thấy nền card */
+	color: #333;
+	font-weight: 500;
+	transition: all 0.2s ease-in-out;
+}
+
+/* Hiệu ứng hover (lấy từ v1) */
+.main-vendor-orders .recent-orders-card .table-hover tbody tr:hover {
+	background-color: rgba(231, 60, 126, 0.15) !important; /* Nền hồng mờ */
+	transform: scale(1.015);
+	box-shadow: 0 4px 15px rgba(231, 60, 126, 0.2);
+	border-radius: 8px;
+}
+
+/*
+ * File: web2.css (PHẦN THÊM)
+ * Mục đích: (FIX V5) "HẠ GỤC" ANIMATION GÂY BIẾN DẠNG NÚT "LƯU"
+ */
+
+/* ================================================================== */
+/* 11. (FIX V5) TẮT HIỆU ỨNG "PULSE" (MỤC 3) CHO NÚT TRONG BẢNG
+/* ================================================================== */
+
+/* * Tắt animation "pulse" cho nút .btn-primary bên trong bảng 
+ * để nó không bị "giật" và tính toán sai layout.
+ */
+.main-vendor-orders .recent-orders-card .btn-primary {
+	animation: none !important; /* Dùng !important để "đè" web.css (v1) */
+}
+
+
+/* ================================================================== */
+/* 12. (FIX V5) TẮT HIỆU ỨNG "SHINE" (MỤC 4) CHO NÚT TRONG BẢNG
+/* ================================================================== */
+
+/* * Tắt các thuộc tính "shine" (Mục 4) gây biến dạng.
+ * Đây là THỦ PHẠM CHÍNH.
+ */
+.main-vendor-orders .recent-orders-card .btn {
+    position: static !important; /* Reset 'position: relative' về mặc định */
+    overflow: visible !important; /* Reset 'overflow: hidden' về mặc định */
+}
+        
+/* Tắt luôn hiệu ứng scale on hover cho nó đỡ giật */
+.main-vendor-orders .recent-orders-card .btn:hover {
+    transform: none !important; 
+}
+/*
+ * File: web2.css (PHẦN THÊM)
+ * Mục đích: (FIX V6) Style "Pro Max" cho trang VENDOR VOUCHERS
+ */
+
+/* ================================================================== */
+/* 13. NỀN TRANG VOUCHERS (GIỐNG DASHBOARD/ORDERS)
+/* ================================================================== */
+
+/* Dùng :has() để chỉ áp dụng nền khi body chứa .main-vendor-vouchers */
+body:has(.main-vendor-vouchers) {
+	/* Dùng lại dải màu pastel siêu chậm từ web.css (v1) */
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* Cam */
+		rgba(231, 60, 126, 0.25), /* Hồng */
+		rgba(35, 166, 213, 0.25), /* Xanh */
+		rgba(35, 213, 171, 0.25) /* Xanh ngọc */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* ================================================================== */
+/* 14. KHUNG LỌC VOUCHERS (GIỐNG ORDERS)
+/* ================================================================== */
+
+/* Áp dụng nền xanh pastel (AliceBlue) cho .filter-card */
+.main-vendor-vouchers .filter-card {
+	background: #f0faff; /* Màu "AliceBlue" (xanh siêu nhạt) */
+	border: 0;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Hiệu ứng "glow" MÀU XANH khi hover */
+.main-vendor-vouchers .filter-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 10px 25px rgba(35, 166, 213, 0.3); /* Glow xanh */
+}
+
+/* "Hạ gục" input/select trắng (nền mờ) */
+.main-vendor-vouchers .filter-card .form-control,
+.main-vendor-vouchers .filter-card .form-select {
+	background-color: rgba(255, 255, 255, 0.7) !important;
+	border: 1px solid rgba(0, 0, 0, 0.1) !important;
+	font-weight: 500;
+	box-shadow: none;
+}
+
+/* Đổi màu focus cho hợp tone xanh */
+.main-vendor-vouchers .filter-card .form-control:focus,
+.main-vendor-vouchers .filter-card .form-select:focus {
+	border-color: #23a6d5 !important;
+	box-shadow: 0 0 10px rgba(35, 166, 213, 0.3) !important;
+}
+
+/* Nút "Lọc" (btn-primary) sẽ tự động ăn style xanh "cháy" từ v2 */
+
+
+/* ================================================================== */
+/* 15. CARD BẢNG VÀ BẢNG (GIỐNG ORDERS)
+/* ================================================================== */
+
+/* Áp dụng nền tím pastel (f8f7ff) cho .recent-orders-card */
+.main-vendor-vouchers .recent-orders-card {
+	background: #f8f7ff;
+	border: 0;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.main-vendor-vouchers .recent-orders-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 10px 25px rgba(231, 60, 126, 0.3); /* Glow hồng */
+}
+
+/* Tiêu đề card */
+.main-vendor-vouchers .recent-orders-card .card-title {
+	color: #333;
+	font-weight: 600;
+}
+
+/* Header bảng (Fix lỗi "mất tên cột") */
+.main-vendor-vouchers .recent-orders-card .table thead {
+	background: #e73c7e !important; /* Màu hồng đậm "CHÁY" */
+	color: #ffffff;
+}
+.main-vendor-vouchers .recent-orders-card .table thead th {
+	color: #ffffff;
+	border: 0; /* Bỏ border của bootstrap */
+}
+
+/* Các hàng trong bảng (Fix lỗi "trắng nhiều quá") */
+.main-vendor-vouchers .recent-orders-card .table tbody tr {
+	background-color: transparent !important; /* TRONG SUỐT */
+	color: #333;
+	font-weight: 500;
+	transition: all 0.2s ease-in-out;
+}
+.main-vendor-vouchers .recent-orders-card .table tbody tr:hover {
+	background-color: rgba(231, 60, 126, 0.15) !important; /* Nền hồng mờ */
+	transform: scale(1.015);
+	box-shadow: 0 4px 15px rgba(231, 60, 126, 0.2);
+	border-radius: 8px;
+}
+
+/* Bỏ nốt cái border-bottom mặc định của cell */
+.main-vendor-vouchers .recent-orders-card .table td {
+	border-bottom: 0; 
+}
+/* Giữ lại 1 đường kẻ mờ ngăn cách cho đẹp */
+.main-vendor-vouchers .recent-orders-card .table tbody tr:not(:last-child) td {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+
+/* ================================================================== */
+/* 16. STYLE CHI TIẾT TRONG BẢNG VOUCHERS
+/* ================================================================== */
+
+/* Làm nổi bật CỘT CODE */
+.main-vendor-vouchers .code-highlight {
+	color: #e73c7e; /* Màu hồng "cháy" */
+	background-color: rgba(231, 60, 126, 0.1);
+	padding: 3px 6px;
+	border-radius: 4px;
+	font-family: 'Consolas', 'Menlo', monospace;
+}
+
+/* Làm nổi bật CỘT GIÁ TRỊ */
+.main-vendor-vouchers .price-highlight {
+	color: #198754; /* Xanh lá (success) */
+	font-weight: 600;
+}
+
+/* Căn lại cột ngày tháng (cho nhỏ và đều) */
+.main-vendor-vouchers .voucher-dates {
+	font-size: 0.85rem;
+	line-height: 1.4;
+	color: #6c757d;
+}
+.main-vendor-vouchers .voucher-dates small {
+	color: #6c757d;
+}
+
+/* Thêm "glow" cho badge INACTIVE (màu xám) */
+.badge.bg-secondary {
+	box-shadow: 0 0 10px rgba(108, 117, 125, 0.7);
+}
+
+
+/* ================================================================== */
+/* 17. STYLE CÁC NÚT ACTIONS (GIỐNG TRANG PRODUCTS)
+/* ================================================================== */
+
+/* Dùng lại logic "nhuộm" nút của v1 (Mục 20) */
+.main-vendor-vouchers .voucher-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	vertical-align: middle;
+}
+.main-vendor-vouchers .voucher-actions .btn {
+	color: #ffffff !important;
+	border: 0;
+	font-weight: 600;
+	transition: transform 0.2s ease;
+}
+.main-vendor-vouchers .voucher-actions .btn:hover {
+	transform: scale(1.1);
+	opacity: 0.9;
+}
+
+/* "Nhuộm" từng nút */
+.main-vendor-vouchers .voucher-actions .btn.btn-outline-primary {
+	background-color: #23a6d5 !important; /* Sửa (Xanh biển) */
+}
+.main-vendor-vouchers .voucher-actions .btn.btn-outline-danger {
+	background-color: #dc3545 !important; /* Ẩn (Đỏ) */
+}
+.main-vendor-vouchers .voucher-actions .btn.btn-outline-success {
+	background-color: #198754 !important; /* Hiện (Xanh lá) */
+}
+/*
+ * File: web2.css (PHẦN THÊM)
+ * Mục đích: (FIX V7) STYLE "PRO MAX" CHO TRANG SHOE ATTRIBUTE
+ */
+
+/* ================================================================== */
+/* 18. NỀN TRANG VÀ TIÊU ĐỀ ATTRIBUTES
+/* ================================================================== */
+
+/* Dùng :has() để chỉ áp dụng nền khi body chứa .main-vendor-attributes */
+body:has(.main-vendor-attributes) {
+	/* Dùng lại dải màu pastel siêu chậm từ web.css (v1) */
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* Cam */
+		rgba(231, 60, 126, 0.25), /* Hồng */
+		rgba(35, 166, 213, 0.25), /* Xanh */
+		rgba(35, 213, 171, 0.25) /* Xanh ngọc */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* "Hạ gục" tiêu đề (giống V3) */
+.main-vendor-attributes h2.gradient-text {
+	background: linear-gradient(
+		-45deg,
+		#e73c7e,
+		#23a6d5,
+		#23d5ab
+	);
+	background-size: 300% 300%;
+	animation: gradient-animation 10s ease infinite;
+
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+	font-weight: 700;
+}
+
+
+/* ================================================================== */
+/* 19. KHUNG FORM MÀU HỒNG (FORM-CARD-PINK)
+/* ================================================================== */
+
+/* * Dùng style từ v1 (Mục 16)
+ * (Dùng cho card "Thêm sản phẩm")
+ */
+.main-vendor-attributes .form-card-pink {
+	background: #fff0f5; /* Màu "LavenderBlush" (hồng siêu nhạt) */
+	border: 0;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Hiệu ứng "glow" HỒNG khi hover (giống v1) */
+.main-vendor-attributes .form-card-pink:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 10px 25px rgba(231, 60, 126, 0.3); /* Glow hồng */
+}
+
+/* Tiêu đề card */
+.main-vendor-attributes .form-card-pink .card-title {
+	color: #333;
+	font-weight: 600;
+}
+
+/* ================================================================== */
+/* 20. "HẠ GỤC" INPUTS BÊN TRONG CARD HỒNG
+/* ================================================================== */
+
+/* Dùng style từ v1 (Mục 17) */
+.main-vendor-attributes .form-card-pink .form-control,
+.main-vendor-attributes .form-card-pink .form-select {
+	background-color: rgba(255, 255, 255, 0.7) !important;
+	border: 1px solid rgba(0, 0, 0, 0.1) !important;
+	color: #333;
+	font-weight: 500;
+	box-shadow: none;
+}
+
+/* Đổi màu focus cho hợp tone HỒNG */
+.main-vendor-attributes .form-card-pink .form-control:focus,
+.main-vendor-attributes .form-card-pink .form-select:focus {
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 10px rgba(231, 60, 126, 0.3) !important;
+}
+
+/* ================================================================== */
+/* 21. "NHUỘM" NÚT "LƯU THAY ĐỔI"
+/* ================================================================== */
+
+/* Dùng style từ v1 (Mục 18) */
+.main-vendor-attributes .form-card-pink .btn-primary {
+	background-color: #e73c7e !important; /* Hồng "cháy" */
+	border-color: #e73c7e !important;
+	font-weight: 600;
+}
+/* Nút này sẽ tự động "ăn" pulse/shine từ v1 */
+/*
+ * File: web2.css (PHẦN THÊM)
+ * Mục đích: (FIX V8) STYLE TRANG "TẠO SHOP" + REFACTOR CARD HỒNG
+ */
+
+/* ================================================================== */
+/* 22. (REFACTOR) LÀM CHO CARD HỒNG (V7) DÙNG LẠI ĐƯỢC
+/* ================================================================== */
+
+/* * V7 (cũ) dùng ".main-vendor-attributes .form-card-pink" (quá cụ thể).
+ * V8 (mới) sẽ dùng ".form-card-pink" chung cho BẤT KỲ trang nào.
+ * * HÀNH ĐỘNG: Bro có thể XÓA Mục 19, 20, 21 (của V7) 
+ * và THAY BẰNG 3 khối code chung này.
+ */
+
+/* Style CHUNG cho card hồng (trang Thêm SP, Thuộc tính, Tạo Shop) */
+.form-card-pink {
+	background: #fff0f5; /* Màu "LavenderBlush" (hồng siêu nhạt) */
+	border: 0;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.form-card-pink:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 10px 25px rgba(231, 60, 126, 0.3); /* Glow hồng */
+}
+.form-card-pink .card-title {
+	color: #333;
+	font-weight: 600;
+}
+
+/* "Hạ gục" input/select BÊN TRONG card hồng */
+.form-card-pink .form-control,
+.form-card-pink .form-select {
+	background-color: rgba(255, 255, 255, 0.7) !important;
+	border: 1px solid rgba(0, 0, 0, 0.1) !important;
+	font-weight: 500;
+	box-shadow: none;
+}
+.form-card-pink .form-control:focus,
+.form-card-pink .form-select:focus {
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 10px rgba(231, 60, 126, 0.3) !important;
+}
+	
+/* "Nhuộm" nút .btn-primary BÊN TRONG card hồng */
+.form-card-pink .btn-primary {
+	background-color: #e73c7e !important; /* Hồng "cháy" */
+	border-color: #e73c7e !important;
+	font-weight: 600;
+}
+/* Nút này sẽ tự "ăn" pulse/shine từ web.css (v1) */
+
+
+/* ================================================================== */
+/* 23. NỀN TRANG VÀ TIÊU ĐỀ CHO TRANG "TẠO SHOP"
+/* ================================================================== */
+
+/* Dùng :has() để chỉ áp dụng nền khi body chứa .main-vendor-shop-create */
+body:has(.main-vendor-shop-create) {
+	/* Dùng lại dải màu pastel siêu chậm từ web.css (v1) */
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* Cam */
+		rgba(231, 60, 126, 0.25), /* Hồng */
+		rgba(35, 166, 213, 0.25), /* Xanh */
+		rgba(35, 213, 171, 0.25) /* Xanh ngọc */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* "Hạ gục" tiêu đề (giống V3) */
+.main-vendor-shop-create h2.gradient-text {
+	background: linear-gradient(
+		-45deg,
+		#e73c7e,
+		#23a6d5,
+		#23d5ab
+	);
+	background-size: 300% 300%;
+	animation: gradient-animation 10s ease infinite;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+	font-weight: 700;
+}
+/*
+ * File: web2.css (PHẦN THÊM)
+ * Mục đích: (FIX V9) STYLE TRANG "VOUCHER FORM"
+ */
+
+/* ================================================================== */
+/* 24. NỀN TRANG VÀ TIÊU ĐỀ CHO TRANG "VOUCHER FORM"
+/* ================================================================== */
+
+/* Dùng :has() để chỉ áp dụng nền khi body chứa .main-vendor-voucher-form */
+body:has(.main-vendor-voucher-form) {
+	/* Dùng lại dải màu pastel siêu chậm từ web.css (v1) */
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* Cam */
+		rgba(231, 60, 126, 0.25), /* Hồng */
+		rgba(35, 166, 213, 0.25), /* Xanh */
+		rgba(35, 213, 171, 0.25) /* Xanh ngọc */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* "Hạ gục" tiêu đề (giống V3) */
+.main-vendor-voucher-form h2.gradient-text {
+	background: linear-gradient(
+		-45deg,
+		#e73c7e,
+		#23a6d5,
+		#23d5ab
+	);
+	background-size: 300% 300%;
+	animation: gradient-animation 10s ease infinite;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+	font-weight: 700;
+}
+
+/* ================================================================== */
+/* 25. (NÂNG CẤP V8) STYLE NÚT "HỦY" (OUTLINE) TRONG CARD HỒNG
+/* ================================================================== */
+
+/* * Nâng cấp Fix V8 (Mục 22)
+ * Thêm style cho nút .btn-outline-secondary
+ * khi nó nằm trong .form-card-pink
+ */
+.form-card-pink .btn-outline-secondary {
+	border-color: #e73c7e; /* Viền hồng */
+	color: #e73c7e; /* Chữ hồng */
+	font-weight: 600;
+	transition: all 0.2s ease-in-out;
+}
+.form-card-pink .btn-outline-secondary:hover {
+	background-color: #e73c7e; /* Nền hồng "cháy" */
+	color: #ffffff;
+	transform: scale(1.05);
+}
+/*
+ * File: web2.css (PHẦN THÊM)
+ * Mục đích: (FIX V10) STYLE "TUYỆT TRẦN" 10 ĐIỂM CHO PUBLIC CHAT
+ */
+
+/* ================================================================== */
+/* 26. NỀN TRANG CHAT
+/* ================================================================== */
+
+/* * Dùng :has() để áp dụng nền pastel "cháy" 
+ * và ép trang chat full-height (vh)
+ */
+body:has(.main-public-chat) {
+	/* Dùng lại dải màu pastel siêu chậm từ web.css (v1) */
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* Cam */
+		rgba(231, 60, 126, 0.25), /* Hồng */
+		rgba(35, 166, 213, 0.25), /* Xanh */
+		rgba(35, 213, 171, 0.25) /* Xanh ngọc */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+	
+	/* Ép body full màn hình */
+	height: 100vh;
+	overflow: hidden; /* Ẩn scrollbar của body */
+}
+
+/* Ép <main> phải căn giữa và full-height */
+.main-public-chat {
+	height: 100vh;
+	display: flex;
+	align-items: center; /* Căn giữa theo chiều dọc */
+	justify-content: center; /* Căn giữa theo chiều ngang */
+	padding: 1rem;
+}
+
+
+/* ================================================================== */
+/* 27. KHUNG CHAT "KÍNH MỜ" (GLASSMORPHISM)
+/* ================================================================== */
+
+.chat-wrapper {
+	width: 100%;
+	max-width: 800px; /* Giới hạn chiều rộng */
+	
+	/* Hiệu ứng "KÍNH MỜ" (Glassmorphism) */
+	background: rgba(255, 255, 255, 0.2);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	
+	border-radius: 12px;
+	padding: 1.5rem;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+	
+	/* Hạn chế chiều cao trên màn hình nhỏ */
+	max-height: 95vh; 
+	display: flex;
+	flex-direction: column;
+}
+
+/* ================================================================== */
+/* 28. KHUNG NỘI DUNG CHAT (CHATBOX)
+/* ================================================================== */
+#chatBox {
+	/* Chiều cao 450px và tự cuộn */
+	height: 450px; 
+	overflow-y: auto;
+	
+	/* Nền "kính mờ" tối hơn để dễ đọc */
+	background: rgba(0, 0, 0, 0.15);
+	border-radius: 8px;
+	padding: 15px;
+	
+	/* CHỮ TRẮNG (vì nền đã tối) */
+	color: #ffffff;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+	
+	/* Cho thanh cuộn đẹp hơn (trên Chrome/Safari) */
+	scrollbar-width: thin;
+	scrollbar-color: #e73c7e #333;
+}
+#chatBox::-webkit-scrollbar {
+	width: 8px;
+}
+#chatBox::-webkit-scrollbar-thumb {
+	background-color: #e73c7e; /* Màu hồng "cháy" */
+	border-radius: 4px;
+}
+
+/* ================================================================== */
+/* 29. STYLE TỪNG TIN NHẮN (TỪ JS NÂNG CẤP)
+/* ================================================================== */
+
+/* Style chung cho 1 tin nhắn */
+.msg {
+	margin-bottom: 8px;
+	line-height: 1.5;
+	padding: 2px 4px;
+	border-radius: 4px;
+	/* Hiệu ứng fade-in nhẹ */
+	animation: fadeInMsg 0.3s ease-out;
+}
+
+/* Style cho tin nhắn HỆ THỐNG (Connect, Disconnect...) */
+.msg-system {
+	font-style: italic;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.7);
+	font-size: 0.9rem;
+}
+
+/* Style cho NICKNAME người chat (in đậm, màu "cháy") */
+.msg-nick {
+	font-weight: 700;
+	/* Dùng 1 màu trong dải gradient (cam/hồng) */
+	color: #ee7752; 
+}
+
+/* Style cho NỘI DUNG tin nhắn (cho phép xuống dòng) */
+.msg-text {
+	white-space: pre-wrap; /* Giữ các dấu xuống dòng */
+	word-wrap: break-word; /* Tự ngắt từ quá dài */
+}
+
+/* Keyframe cho tin nhắn mới */
+@keyframes fadeInMsg {
+	from { opacity: 0; transform: translateY(5px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================================================================== */
+/* 30. KHUNG NHẬP LIỆU (INPUT + BUTTON)
+/* ================================================================== */
+
+/* "Hạ gục" input (giống V8) nhưng màu sáng hơn */
+#chatForm #msgInput {
+	background-color: rgba(255, 255, 255, 0.4) !important;
+	border: 1px solid rgba(255, 255, 255, 0.3) !important;
+	color: #000; /* Chữ đen cho dễ gõ */
+	font-weight: 500;
+	box-shadow: none;
+}
+#chatForm #msgInput::placeholder {
+	color: #333;
+}
+#chatForm #msgInput:focus {
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 10px rgba(231, 60, 126, 0.3) !important;
+}
+
+/* "Nhuộm" nút GỬI (Hồng "cháy") (giống V8) */
+#chatForm .btn-primary {
+	background-color: #e73c7e !important;
+	border-color: #e73c7e !important;
+	font-weight: 600;
+	
+	/* Style cho nút icon */
+	width: 55px; /* Rộng hơn 1 tí */
+	font-size: 1.1rem;
+	padding-top: 0.6rem; /* Căn icon ra giữa */
+}
+/* Nút này sẽ tự "ăn" pulse/shine từ v1 */
+
+/*
+ * File: web2.css (PHẦN THÊM)
+ * Mục đích: (FIX V11) STYLE "PRO MAX" CHO TRANG CHAT NỘI BỘ (VENDOR)
+ */
+
+/* ================================================================== */
+/* 31. NỀN TRANG VÀ LAYOUT CHAT NỘI BỘ
+/* ================================================================== */
+
+/* Dùng :has() để áp dụng nền pastel (v1) */
+body:has(.main-chat) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.25), /* Cam */
+		rgba(231, 60, 126, 0.25), /* Hồng */
+		rgba(35, 166, 213, 0.25), /* Xanh */
+		rgba(35, 213, 171, 0.25) /* Xanh ngọc */
+	);
+	background-color: #ffffff; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* Giới hạn chiều rộng cho dễ đọc */
+.main-chat {
+	max-width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* "Hạ gục" tiêu đề (giống V3) */
+.main-chat h3.gradient-text {
+	background: linear-gradient( -45deg, #e73c7e, #23a6d5, #23d5ab );
+	background-size: 300% 300%;
+	animation: gradient-animation 10s ease infinite;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+	font-weight: 700;
+}
+
+/* ================================================================== */
+/* 32. "NHUỘM" CARD HỒNG (KHUNG CHAT)
+/* ================================================================== */
+
+/* "Tóm" lấy class .chat-box-pink bro đã "mồi" */
+.main-chat .chat-box-pink {
+	background: #fff0f5; /* Màu "LavenderBlush" (hồng siêu nhạt) */
+	border: 0;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.main-chat .chat-box-pink:hover {
+	transform: translateY(-5px); /* Hover nhẹ thôi */
+	box-shadow: 0 10px 25px rgba(231, 60, 126, 0.3); /* Glow hồng */
+}
+
+/* Style cho nội dung bên trong (chữ đen, nền hồng) */
+#chatBox {
+	color: #333; /* Chữ đen (khác V10) */
+	white-space: pre-wrap;
+	
+	/* Cho thanh cuộn đẹp (giống V10) */
+	scrollbar-width: thin;
+	scrollbar-color: #e73c7e #fddde
+}
+#chatBox::-webkit-scrollbar {
+	width: 8px;
+}
+#chatBox::-webkit-scrollbar-thumb {
+	background-color: #e73c7e; /* Màu hồng "cháy" */
+	border-radius: 4px;
+}
+
+/* ================================================================== */
+/* 33. STYLE TIN NHẮN (NỀN SÁNG)
+/* ================================================================== */
+
+.msg {
+	margin-bottom: 8px;
+	line-height: 1.5;
+	padding: 2px 4px;
+	animation: fadeInMsg 0.3s ease-out; /* Dùng lại anim V10 */
+}
+
+/* Tin nhắn HỆ THỐNG (màu xám) */
+.msg-system {
+	font-style: italic;
+	text-align: center;
+	color: #888;
+	font-size: 0.9rem;
+}
+
+/* NICKNAME (màu hồng "cháy") */
+.msg-nick {
+	font-weight: 700;
+	color: #e73c7e; 
+}
+
+/* NỘI DUNG (chữ đen) */
+.msg-text {
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	color: #333;
+}
+
+
+/* ================================================================== */
+/* 34. "NHUỘM" CARD XANH (KHUNG INPUT)
+/* ================================================================== */
+
+/* "Tóm" lấy class .chat-form-blue bro đã "mồi" */
+.main-chat .chat-form-blue {
+	background: #f0faff; /* Màu "AliceBlue" (xanh siêu nhạt) */
+	border: 0;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.main-chat .chat-form-blue:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 25px rgba(35, 166, 213, 0.3); /* Glow xanh */
+}
+
+/* "Hạ gục" input (giống V6) */
+.main-chat .chat-form-blue .form-control {
+	background-color: rgba(255, 255, 255, 0.7) !important;
+	border: 1px solid rgba(0, 0, 0, 0.1) !important;
+	font-weight: 500;
+	box-shadow: none;
+}
+.main-chat .chat-form-blue .form-control:focus {
+	border-color: #23a6d5 !important;
+	box-shadow: 0 0 10px rgba(35, 166, 213, 0.3) !important;
+}
+
+/* "Hạ gục" nút Gửi (btn-primary) (giống V6) */
+.main-chat .chat-form-blue .btn-primary {
+	background-color: #23a6d5 !important; /* Xanh "cháy" */
+	border-color: #23a6d5 !important;
+	font-weight: 600;
+}
+/* Nút này sẽ tự "ăn" pulse/shine từ v1 */
+/*
+ * File: web2.css (PHẦN THÊM)
+ * Mục đích: (FIX V12) TĂNG FONT CHỮ CHAT + SỬA LỖI XUNG ĐỘT CSS V10/V11
+ */
+
+/* ================================================================== */
+/* 28. (REFACTOR V12) KHUNG NỘI DUNG CHAT (PUBLIC)
+/* ================================================================== */
+
+/* * Thêm .main-public-chat để "scope" (gói) CSS lại, 
+ * tránh "đá" CSS của trang Vendor
+ */
+.main-public-chat #chatBox { 
+	height: 450px; 
+	overflow-y: auto;
+	background: rgba(0, 0, 0, 0.15);
+	border-radius: 8px;
+	padding: 15px;
+	color: #ffffff;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+	scrollbar-width: thin;
+	scrollbar-color: #e73c7e #333;
+}
+.main-public-chat #chatBox::-webkit-scrollbar {
+	width: 8px;
+}
+.main-public-chat #chatBox::-webkit-scrollbar-thumb {
+	background-color: #e73c7e;
+	border-radius: 4px;
+}
+
+/* ================================================================== */
+/* 29. (REFACTOR V12) STYLE TIN NHẮN (PUBLIC)
+/* ================================================================== */
+
+.main-public-chat .msg { 
+	margin-bottom: 8px;
+	line-height: 1.5;
+	padding: 2px 4px;
+	animation: fadeInMsgPublic 0.3s ease-out; /* Sửa tên animation */
+}
+.main-public-chat .msg-system {
+	font-style: italic;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.7);
+	font-size: 0.9rem;
+}
+.main-public-chat .msg-nick { 
+	font-weight: 700;
+	color: #ee7752; 
+    font-size: 1.05rem; /* <<<<<< ĐÃ TĂNG FONT CHỮ */
+}
+.main-public-chat .msg-text { 
+	white-space: pre-wrap;
+	word-wrap: break-word;
+    font-size: 1.05rem; /* <<<<<< ĐÃ TĂNG FONT CHỮ */
+}
+
+/* Keyframe mới cho public chat (tránh trùng tên) */
+@keyframes fadeInMsgPublic {
+	from { opacity: 0; transform: translateY(5px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ================================================================== */
+/* 32. (REFACTOR V12) KHUNG CHAT (VENDOR)
+/* ================================================================== */
+.main-chat .chat-box-pink {
+	background: #fff0f5;
+	border: 0;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.main-chat .chat-box-pink:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 25px rgba(231, 60, 126, 0.3);
+}
+
+/* Style cho nội dung (đã "scope" bằng .main-chat) */
+.main-chat #chatBox {
+	color: #333;
+	white-space: pre-wrap;
+	scrollbar-width: thin;
+	scrollbar-color: #e73c7e #fddde;
+}
+.main-chat #chatBox::-webkit-scrollbar {
+	width: 8px;
+}
+.main-chat #chatBox::-webkit-scrollbar-thumb {
+	background-color: #e73c7e;
+	border-radius: 4px;
+}
+
+/* ================================================================== */
+/* 33. (REFACTOR V12) STYLE TIN NHẮN (VENDOR)
+/* ================================================================== */
+
+/* * Thêm .main-chat để "scope" CSS
+ */
+.main-chat .msg {
+	margin-bottom: 8px;
+	line-height: 1.5;
+	padding: 2px 4px;
+	animation: fadeInMsgVendor 0.3s ease-out; /* Sửa tên animation */
+}
+.main-chat .msg-system {
+	font-style: italic;
+	text-align: center;
+	color: #888;
+	font-size: 0.9rem;
+}
+.main-chat .msg-nick {
+	font-weight: 700;
+	color: #e73c7e;
+    font-size: 1.05rem; /* <<<<<< ĐÃ TĂNG FONT CHỮ */
+}
+.main-chat .msg-text {
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	color: #333;
+    font-size: 1.05rem; /* <<<<<< ĐÃ TĂNG FONT CHỮ */
+}
+
+/* Keyframe mới cho vendor chat (tránh trùng tên) */
+@keyframes fadeInMsgVendor {
+	from { opacity: 0; transform: translateY(5px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+/*
+ * File: custom.css (FIX V13)
+ * Mục đích: Style "TUYỆT TRẦN" (10 ĐIỂM) cho public user (Trang List, Detail...)
+ * Phụ thuộc: web.css (v1) (phải được load TRƯỚC file này)
+ */
+
+/* ================================================================== */
+/* 1. NỀN TRANG (ĂN THEO VENDOR)
+/* ================================================================== */
+/* Dùng lại nền pastel "cháy" siêu chậm từ web.css (v1) */
+body {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.15), /* Cam (nhạt hơn V11) */
+		rgba(231, 60, 126, 0.15), /* Hồng */
+		rgba(35, 166, 213, 0.15), /* Xanh */
+		rgba(35, 213, 171, 0.15) /* Xanh ngọc */
+	);
+	background-color: #f8f9fa; /* Nền trắng xám nhẹ */
+	background-size: 400% 400%;
+	/* Dùng lại animation 'gradient-animation' (từ v1) */
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* ================================================================== */
+/* 2. TIÊU ĐỀ "SIÊU ĐẸP" (text-gradient)
+/* ================================================================== */
+.text-gradient {
+	/* Dùng lại dải màu "cháy" của navbar (từ v1) */
+	background: linear-gradient( -45deg, #ee7752, #e73c7e, #23a6d5 );
+	background-size: 300% 300%;
+	/* Dùng lại animation 'gradient-animation' (từ v1) */
+	animation: gradient-animation 10s ease infinite;
+
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+}
+.letter-spacing-2 { letter-spacing: 2px; }
+
+/* ================================================================== */
+/* 3. BỘ LỌC "KÍNH MỜ" (filter-bar-wrap)
+/* ================================================================== */
+.filter-bar-wrap {
+	/* Hiệu ứng "KÍNH MỜ" (Glassmorphism) */
+	background: rgba(255, 255, 255, 0.35);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	
+	border-radius: 1.5rem; /* Bo góc "mạnh" */
+	padding: 1.5rem;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ================================================================== */
+/* 4. INPUTS "NÂNG" (input-elevate)
+/* ================================================================== */
+.input-elevate {
+	border: 0;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease-in-out;
+	font-weight: 500;
+}
+.input-elevate:focus,
+.input-elevate:focus-within { /* Hỗ trợ <span> bọc input */
+	transform: translateY(-3px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 15px rgba(231, 60, 126, 0.3) !important;
+}
+
+/* ================================================================== */
+/* 5. NÚT "LỌC NGAY" (btn-gradient)
+/* ================================================================== */
+.btn-gradient {
+	background: linear-gradient(-45deg, #ee7752, #e73c7e);
+	background-size: 200% 200%;
+	border: 0;
+	color: #ffffff;
+	font-weight: 600;
+	transition: all 0.3s ease;
+	
+	/* Dùng lại animation "PULSE" (từ v1) */
+	animation: pulse-danger 2s infinite; /* pulse-danger là màu hồng */
+}
+.btn-gradient:hover {
+	color: #ffffff;
+	transform: scale(1.05) translateY(-2px);
+	box-shadow: 0 10px 20px rgba(231, 60, 126, 0.4);
+	background-position: 50% 50%;
+}
+
+/* ================================================================== */
+/* 6. THẺ SẢN PHẨM "SIÊU HIỆU ỨNG" (product-card)
+/* ================================================================== */
+.product-card {
+	border: 0;
+	border-radius: 1rem; /* Bo góc mạnh */
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+	transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	background: #ffffff;
+	overflow: hidden; /* Bắt buộc để bo góc ảnh */
+}
+
+/* Hiệu ứng "NÂNG LÊN" và "GLOW HỒNG" */
+.product-card:hover {
+	transform: translateY(-12px);
+	box-shadow: 0 15px 35px rgba(231, 60, 126, 0.3); /* Glow hồng "cháy" */
+}
+
+/* ================================================================== */
+/* 7. ẢNH SẢN PHẨM (product-thumb)
+/* ================================================================== */
+.product-thumb {
+	transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Hiệu ứng "ZOOM" ảnh khi hover card */
+.product-card:hover .product-thumb {
+	transform: scale(1.08);
+}
+
+/* ================================================================== */
+/* 8. CHIP GIẢM GIÁ (discount-chip)
+/* ================================================================== */
+.discount-chip {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	z-index: 10;
+	background: #e73c7e; /* Hồng "cháy" */
+	color: #ffffff;
+	font-weight: 700;
+	font-size: 0.8rem;
+	padding: 4px 8px;
+	border-radius: 0.5rem;
+	/* Thêm hiệu ứng "thở" nhẹ */
+	animation: pulse-danger 2s infinite;
+}
+
+/* ================================================================== */
+/* 9. BADGE "MỀM" (badge-soft & bg-soft-pink)
+/* ================================================================== */
+.badge-soft {
+	background-color: #f0faff; /* Xanh pastel (AliceBlue) */
+	color: #23a6d5; /* Xanh "cháy" */
+	font-weight: 600;
+}
+.bg-soft-pink {
+	background-color: #fff0f5; /* Hồng pastel (LavenderBlush) */
+	color: #e73c7e !important; /* Chữ hồng "cháy" */
+	font-weight: 600 !important;
+}
+
+/* ================================================================== */
+/* 10. GIÁ (price-sale-tag)
+/* ================================================================== */
+.price-sale-tag {
+	font-size: 1.25rem; /* To, rõ */
+	font-weight: 700;
+}
+
+/* ================================================================== */
+/* 11. NÚT "MUA NGAY" (btn-pink)
+/* ================================================================== */
+.btn-pink {
+	background-color: #e73c7e;
+	border-color: #e73c7e;
+	color: #ffffff;
+	font-weight: 600;
+	transition: all 0.3s ease;
+	
+	/* Ẩn nút đi lúc bình thường */
+	transform: translateY(200%);
+	opacity: 0;
+}
+/* Hiệu ứng "TRƯỢT LÊN" khi hover card */
+.product-card:hover .btn-pink {
+	transform: translateY(0);
+	opacity: 1;
+}
+/* Style hover cho chính cái nút */
+.btn-pink:hover {
+	color: #ffffff;
+	background-color: #d63373; /* Hồng đậm hơn */
+	transform: scale(1.05); /* Phóng to nhẹ */
+}
+
+
+/* ================================================================== */
+/* 12. PHÂN TRANG (Pagination) "SIÊU ĐẸP"
+/* ================================================================== */
+/* Dùng lại style "kính mờ" của V1 nhưng "Pro Max" hơn */
+.pagination.rounded-pill {
+	/* Nền kính mờ */
+	background: rgba(255, 255, 255, 0.4);
+	backdrop-filter: blur(5px);
+	padding: 0.5rem;
+	
+	/* Tắt nền của Bootstrap */
+	--bs-pagination-bg: transparent;
+	--bs-pagination-border-width: 0;
+	
+	/* Style cho link */
+	--bs-pagination-color: #e73c7e;
+	--bs-pagination-font-weight: 600;
+	--bs-pagination-hover-color: #d63373;
+	--bs-pagination-hover-bg: rgba(255, 255, 255, 0.5);
+	
+	/* Style cho link (Active) */
+	--bs-pagination-active-color: #fff;
+	--bs-pagination-active-bg: #e73c7e; /* Hồng "cháy" */
+	--bs-pagination-active-border-color: #e73c7e;
+}
+.pagination .page-link {
+	border-radius: 50rem !important; /* Ép bo tròn 100% */
+	margin: 0 2px;
+}
+/* Glow cho nút Active */
+.pagination .page-item.active .page-link {
+	box-shadow: 0 5px 15px rgba(231, 60, 126, 0.4);
+	transform: scale(1.05) translateY(-2px);
+}
+
+/* ================================================================== */
+/* 13. KHÔNG CÓ KẾT QUẢ (empty-results-card)
+/* ================================================================== */
+.empty-results-card {
+	/* Dùng nền hồng pastel (giống card vendor) */
+	background: #fff0f5; 
+	border: 1px dashed #e73c7e;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+/*
+ * File: web2.css (PHẦN THÊM - FIX V16)
+ * Mục đích: Style "TUYỆT TRẦN" (10 ĐIỂM) cho public user (Trang List)
+ */
+
+/* ================================================================== */
+/* 1. NỀN TRANG (ĂN THEO VENDOR)
+/* ================================================================== */
+/* Dùng lại nền pastel "cháy" siêu chậm từ web.css (v1) */
+body {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.15), /* Cam (nhạt hơn V11) */
+		rgba(231, 60, 126, 0.15), /* Hồng */
+		rgba(35, 166, 213, 0.15), /* Xanh */
+		rgba(35, 213, 171, 0.15) /* Xanh ngọc */
+	);
+	background-color: #f8f9fa; /* Nền trắng xám nhẹ */
+	background-size: 400% 400%;
+	/* Dùng lại animation 'gradient-animation' (từ v1) */
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* ================================================================== */
+/* 2. TIÊU ĐỀ "SIÊU ĐẸP" (text-gradient)
+/* ================================================================== */
+.text-gradient {
+	/* Dùng lại dải màu "cháy" của navbar (từ v1) */
+	background: linear-gradient( -45deg, #ee7752, #e73c7e, #23a6d5 );
+	background-size: 300% 300%;
+	/* Dùng lại animation 'gradient-animation' (từ v1) */
+	animation: gradient-animation 10s ease infinite;
+
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+}
+.letter-spacing-2 { letter-spacing: 2px; }
+
+/* ================================================================== */
+/* 3. BỘ LỌC "KÍNH MỜ" (filter-bar-wrap)
+/* ================================================================== */
+.filter-bar-wrap {
+	/* Hiệu ứng "KÍNH MỜ" (Glassmorphism) */
+	background: rgba(255, 255, 255, 0.35);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	
+	border-radius: 1.5rem; /* Bo góc "mạnh" */
+	padding: 1.5rem;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ================================================================== */
+/* 4. INPUTS "NÂNG" (input-elevate)
+/* ================================================================== */
+.input-elevate {
+	border: 0;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease-in-out;
+	font-weight: 500;
+}
+.input-elevate:focus,
+.input-elevate:focus-within { /* Hỗ trợ <span> bọc input */
+	transform: translateY(-3px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 15px rgba(231, 60, 126, 0.3) !important;
+}
+
+/* ================================================================== */
+/* 5. NÚT "LỌC NGAY" (btn-gradient)
+/* ================================================================== */
+.btn-gradient {
+	background: linear-gradient(-45deg, #ee7752, #e73c7e);
+	background-size: 200% 200%;
+	border: 0;
+	color: #ffffff;
+	font-weight: 600;
+	transition: all 0.3s ease;
+	
+	/* Dùng lại animation "PULSE" (từ v1) */
+	animation: pulse-danger 2s infinite; /* pulse-danger là màu hồng */
+}
+.btn-gradient:hover {
+	color: #ffffff;
+	transform: scale(1.05) translateY(-2px);
+	box-shadow: 0 10px 20px rgba(231, 60, 126, 0.4);
+	background-position: 50% 50%;
+}
+
+/* ================================================================== */
+/* 6. THẺ SẢN PHẨM "SIÊU HIỆU ỨNG" (product-card)
+/* ================================================================== */
+.product-card {
+	border: 0;
+	border-radius: 1rem; /* Bo góc mạnh */
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+	transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	background: #ffffff;
+	overflow: hidden; /* Bắt buộc để bo góc ảnh */
+}
+
+/* Hiệu ứng "NÂNG LÊN" và "GLOW HỒNG" */
+.product-card:hover {
+	transform: translateY(-12px);
+	box-shadow: 0 15px 35px rgba(231, 60, 126, 0.3); /* Glow hồng "cháy" */
+}
+
+/* ================================================================== */
+/* 7. ẢNH SẢN PHẨM (product-thumb)
+/* ================================================================== */
+.product-thumb {
+	transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Hiệu ứng "ZOOM" ảnh khi hover card */
+.product-card:hover .product-thumb {
+	transform: scale(1.08);
+}
+
+/* ================================================================== */
+/* 8. CHIP GIẢM GIÁ (discount-chip)
+/* ================================================================== */
+.discount-chip {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	z-index: 10;
+	background: #e73c7e; /* Hồng "cháy" */
+	color: #ffffff;
+	font-weight: 700;
+	font-size: 0.8rem;
+	padding: 4px 8px;
+	border-radius: 0.5rem;
+	/* Thêm hiệu ứng "thở" nhẹ */
+	animation: pulse-danger 2s infinite;
+}
+
+/* ================================================================== */
+/* 9. (FIX V16) BADGE "MỀM" (SỬA LỖI TƯƠNG PHẢN)
+/* ================================================================== */
+.badge-soft {
+	background-color: #f0faff; /* Xanh pastel (AliceBlue) */
+    
+    /* <<<<<<<<<< FIX LỖI "LỎ" CỦA BRO NGAY ĐÂY >>>>>>>>>> */
+	color: #0a4a64 !important; /* DÙNG MÀU XANH ĐẬM (thay vì #23a6d5) */
+    
+	font-weight: 600;
+}
+.bg-soft-pink {
+	background-color: #fff0f5; /* Hồng pastel (LavenderBlush) */
+	color: #e73c7e !important; /* Chữ hồng "cháy" (Cái này đã !important) */
+	font-weight: 600 !important;
+}
+
+/* ================================================================== */
+/* 10. GIÁ (price-sale-tag)
+/* ================================================================== */
+.price-sale-tag {
+	font-size: 1.25rem; /* To, rõ */
+	font-weight: 700;
+}
+
+/* ================================================================== */
+/* 11. NÚT "MUA NGAY" (btn-pink)
+/* ================================================================== */
+.btn-pink {
+	background-color: #e73c7e;
+	border-color: #e73c7e;
+	color: #ffffff;
+	font-weight: 600;
+	transition: all 0.3s ease;
+	
+	/* Ẩn nút đi lúc bình thường */
+	transform: translateY(200%);
+	opacity: 0;
+}
+/* Hiệu ứng "TRƯỢT LÊN" khi hover card */
+.product-card:hover .btn-pink {
+	transform: translateY(0);
+	opacity: 1;
+}
+/* Style hover cho chính cái nút */
+.btn-pink:hover {
+	color: #ffffff;
+	background-color: #d63373; /* Hồng đậm hơn */
+	transform: scale(1.05); /* Phóng to nhẹ */
+}
+
+
+/* ================================================================== */
+/* 12. PHÂN TRANG (Pagination) "SIÊU ĐẸP"
+/* ================================================================== */
+.pagination.rounded-pill {
+	/* Nền kính mờ */
+	background: rgba(255, 255, 255, 0.4);
+	backdrop-filter: blur(5px);
+	padding: 0.5rem;
+	
+	/* Tắt nền của Bootstrap */
+	--bs-pagination-bg: transparent;
+	--bs-pagination-border-width: 0;
+	
+	/* Style cho link */
+	--bs-pagination-color: #e73c7e;
+	--bs-pagination-font-weight: 600;
+	--bs-pagination-hover-color: #d63373;
+	--bs-pagination-hover-bg: rgba(255, 255, 255, 0.5);
+	
+	/* Style cho link (Active) */
+	--bs-pagination-active-color: #fff;
+	--bs-pagination-active-bg: #e73c7e; /* Hồng "cháy" */
+	--bs-pagination-active-border-color: #e73c7e;
+}
+.pagination .page-link {
+	border-radius: 50rem !important; /* Ép bo tròn 100% */
+	margin: 0 2px;
+}
+/* Glow cho nút Active */
+.pagination .page-item.active .page-link {
+	box-shadow: 0 5px 15px rgba(231, 60, 126, 0.4);
+	transform: scale(1.05) translateY(-2px);
+}
+
+/* ================================================================== */
+/* 13. KHÔNG CÓ KẾT QUẢ (empty-results-card)
+/* ================================================================== */
+.empty-results-card {
+	/* Dùng nền hồng pastel (giống card vendor) */
+	background: #fff0f5; 
+	border: 1px dashed #e73c7e;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+/*
+ * File: web2.css (PHẦN THÊM - FIX V17)
+ * Mục đích: Style "TUYỆT TRẦN" (10 ĐIỂM) cho public user (Trang List)
+ */
+
+/* ================================================================== */
+/* 1. NỀN TRANG (ĂN THEO VENDOR)
+/* ================================================================== */
+/* Dùng lại nền pastel "cháy" siêu chậm từ web.css (v1) */
+body {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.15), /* Cam (nhạt hơn V11) */
+		rgba(231, 60, 126, 0.15), /* Hồng */
+		rgba(35, 166, 213, 0.15), /* Xanh */
+		rgba(35, 213, 171, 0.15) /* Xanh ngọc */
+	);
+	background-color: #f8f9fa; /* Nền trắng xám nhẹ */
+	background-size: 400% 400%;
+	/* Dùng lại animation 'gradient-animation' (từ v1) */
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* ================================================================== */
+/* 2. TIÊU ĐỀ "SIÊU ĐẸP" (text-gradient)
+/* ================================================================== */
+.text-gradient {
+	/* Dùng lại dải màu "cháy" của navbar (từ v1) */
+	background: linear-gradient( -45deg, #ee7752, #e73c7e, #23a6d5 );
+	background-size: 300% 300%;
+	/* Dùng lại animation 'gradient-animation' (từ v1) */
+	animation: gradient-animation 10s ease infinite;
+
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+}
+.letter-spacing-2 { letter-spacing: 2px; }
+
+/* ================================================================== */
+/* 3. BỘ LỌC "KÍNH MỜ" (filter-bar-wrap)
+/* ================================================================== */
+.filter-bar-wrap {
+	/* Hiệu ứng "KÍNH MỜ" (Glassmorphism) */
+	background: rgba(255, 255, 255, 0.35);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	
+	border-radius: 1.5rem; /* Bo góc "mạnh" */
+	padding: 1.5rem;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ================================================================== */
+/* 4. INPUTS "NÂNG" (input-elevate)
+/* ================================================================== */
+.input-elevate {
+	border: 0;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease-in-out;
+	font-weight: 500;
+}
+.input-elevate:focus,
+.input-elevate:focus-within { /* Hỗ trợ <span> bọc input */
+	transform: translateY(-3px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 15px rgba(231, 60, 126, 0.3) !important;
+}
+
+/* ================================================================== */
+/* 5. NÚT "LỌC NGAY" (btn-gradient)
+/* ================================================================== */
+.btn-gradient {
+	background: linear-gradient(-45deg, #ee7752, #e73c7e);
+	background-size: 200% 200%;
+	border: 0;
+	color: #ffffff;
+	font-weight: 600;
+	transition: all 0.3s ease;
+	
+	/* Dùng lại animation "PULSE" (từ v1) */
+	animation: pulse-danger 2s infinite; /* pulse-danger là màu hồng */
+}
+.btn-gradient:hover {
+	color: #ffffff;
+	transform: scale(1.05) translateY(-2px);
+	box-shadow: 0 10px 20px rgba(231, 60, 126, 0.4);
+	background-position: 50% 50%;
+}
+
+/* ================================================================== */
+/* 6. THẺ SẢN PHẨM "SIÊU HIỆU ỨNG" (product-card)
+/* (THÊM OVERFLOW HIDDEN ĐỂ ẢNH BO GÓC THEO CARD)
+/* ================================================================== */
+.product-card {
+	border: 0;
+	border-radius: 1rem; /* Bo góc mạnh */
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+	transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	background: #ffffff;
+	overflow: hidden; /* <<<<<<< FIX: Bắt buộc để bo góc ảnh theo card */
+}
+
+/* Hiệu ứng "NÂNG LÊN" và "GLOW HỒNG" */
+.product-card:hover {
+	transform: translateY(-12px);
+	box-shadow: 0 15px 35px rgba(231, 60, 126, 0.3); /* Glow hồng "cháy" */
+}
+
+/* ================================================================== */
+/* 7. ẢNH SẢN PHẨM (product-thumb)
+/* ================================================================== */
+.product-thumb {
+	transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Hiệu ứng "ZOOM" ảnh khi hover card */
+.product-card:hover .product-thumb {
+	transform: scale(1.08);
+}
+
+/* ================================================================== */
+/* 8. CHIP GIẢM GIÁ (discount-chip)
+/* ================================================================== */
+.discount-chip {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	z-index: 10;
+	background: #e73c7e; /* Hồng "cháy" */
+	color: #ffffff;
+	font-weight: 700;
+	font-size: 0.8rem;
+	padding: 4px 8px;
+	border-radius: 0.5rem;
+	/* Thêm hiệu ứng "thở" nhẹ */
+	animation: pulse-danger 2s infinite;
+}
+
+/* ================================================================== */
+/* 9. (FIX V17) BADGE "MỀM" (BACKGROUND TRONG SUỐT, CHỮ ĐEN, VIỀN ĐEN)
+/* ================================================================== */
+.badge-soft {
+    background-color: transparent; /* Nền trong suốt */
+	color: #212529 !important; /* Chữ đen (Bootstrap's default text color) */
+	border: 1px solid rgba(0, 0, 0, 0.2); /* Viền đen nhạt */
+	font-weight: 600;
+}
+.bg-soft-pink {
+	background-color: #fff0f5; /* Hồng pastel (LavenderBlush) */
+	color: #e73c7e !important; /* Chữ hồng "cháy" (Cái này đã !important) */
+	font-weight: 600 !important;
+}
+
+/* ================================================================== */
+/* 10. GIÁ (price-sale-tag)
+/* ================================================================== */
+.price-sale-tag {
+	font-size: 1.25rem; /* To, rõ */
+	font-weight: 700;
+}
+
+/* ================================================================== */
+/* 11. NÚT "MUA NGAY" (btn-pink)
+/* ================================================================== */
+.btn-pink {
+	background-color: #e73c7e;
+	border-color: #e73c7e;
+	color: #ffffff;
+	font-weight: 600;
+	transition: all 0.3s ease;
+	
+	/* Ẩn nút đi lúc bình thường */
+	transform: translateY(200%);
+	opacity: 0;
+}
+/* Hiệu ứng "TRƯỢT LÊN" khi hover card */
+.product-card:hover .btn-pink {
+	transform: translateY(0);
+	opacity: 1;
+}
+/* Style hover cho chính cái nút */
+.btn-pink:hover {
+	color: #ffffff;
+	background-color: #d63373; /* Hồng đậm hơn */
+	transform: scale(1.05); /* Phóng to nhẹ */
+}
+
+
+/* ================================================================== */
+/* 12. PHÂN TRANG (Pagination) "SIÊU ĐẸP"
+/* ================================================================== */
+.pagination.rounded-pill {
+	/* Nền kính mờ */
+	background: rgba(255, 255, 255, 0.4);
+	backdrop-filter: blur(5px);
+	padding: 0.5rem;
+	
+	/* Tắt nền của Bootstrap */
+	--bs-pagination-bg: transparent;
+	--bs-pagination-border-width: 0;
+	
+	/* Style cho link */
+	--bs-pagination-color: #e73c7e;
+	--bs-pagination-font-weight: 600;
+	--bs-pagination-hover-color: #d63373;
+	--bs-pagination-hover-bg: rgba(255, 255, 255, 0.5);
+	
+	/* Style cho link (Active) */
+	--bs-pagination-active-color: #fff;
+	--bs-pagination-active-bg: #e73c7e; /* Hồng "cháy" */
+	--bs-pagination-active-border-color: #e73c7e;
+}
+.pagination .page-link {
+	border-radius: 50rem !important; /* Ép bo tròn 100% */
+	margin: 0 2px;
+}
+/* Glow cho nút Active */
+.pagination .page-item.active .page-link {
+	box-shadow: 0 5px 15px rgba(231, 60, 126, 0.4);
+	transform: scale(1.05) translateY(-2px);
+}
+
+/* ================================================================== */
+/* 13. KHÔNG CÓ KẾT QUẢ (empty-results-card)
+/* ================================================================== */
+.empty-results-card {
+	/* Dùng nền hồng pastel (giống card vendor) */
+	background: #fff0f5; 
+	border: 1px dashed #e73c7e;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+/*
+ * File: web2.css (PHẦN THÊM - FIX V18)
+ * Mục đích: SỬA DỨT ĐIỂM LỖI MÀU BADGE (Nike, PU...)
+ */
+
+/* ================================================================== */
+/* 9. (FIX V18) DÙNG "SIÊU SELECTOR" ĐỂ ÉP MÀU BADGE
+/* ================================================================== */
+
+/* * Lỗi: Các rule .badge-soft (V16, V17) đang "đá" nhau.
+ * Fix: Dùng selector ".product-card .badge-soft" (mạnh hơn)
+ * để ÉP nó về đúng ý bro (nền trong suốt, chữ đen, viền đen).
+ */
+.product-card .badge-soft {
+	background-color: transparent !important; /* Nền trong suốt */
+	color: #212529 !important; /* Ép CHỮ ĐEN */
+	border: 1px solid rgba(0, 0, 0, 0.2) !important; /* Ép VIỀN ĐEN */
+	font-weight: 600 !important;
+}
+
+/* Xóa các rule .badge-soft "lỏ" V16, V17 nếu bro thấy */
+/* (Nếu bro lười xóa cũng không sao, rule "siêu selector" V18 ở trên sẽ đè hết) */
+
+/*
+ * File: web2.css (PHẦN THÊM - FIX V19)
+ * Mục đích: "TUYỆT TRẦN" HÓA GIAO DIỆN "LỎ" (V19)
+ */
+
+/* ================================================================== */
+/* 1. NỀN TRANG (ĂN THEO VENDOR)
+/* ================================================================== */
+/* Dùng :has() để "tóm" class "mồi" .product-list-simple */
+body:has(.product-list-simple) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.15),
+		rgba(231, 60, 126, 0.15),
+		rgba(35, 166, 213, 0.15),
+		rgba(35, 213, 171, 0.15)
+	);
+	background-color: #f8f9fa; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* ================================================================== */
+/* 2. TIÊU ĐỀ "SIÊU ĐẸP" (text-gradient)
+/* ================================================================== */
+.text-gradient {
+	background: linear-gradient( -45deg, #ee7752, #e73c7e, #23a6d5 );
+	background-size: 300% 300%;
+	animation: gradient-animation 10s ease infinite;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+}
+.letter-spacing-2 { letter-spacing: 2px; }
+
+/* ================================================================== */
+/* 3. BỘ LỌC (filter-card-simple) (Dùng style "KÍNH MỜ" V13)
+/* ================================================================== */
+.filter-card-simple {
+	background: rgba(255, 255, 255, 0.35);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 1.5rem; /* Bo góc "mạnh" */
+	padding: 1.5rem;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* "Nâng" các input trong bộ lọc */
+.filter-card-simple .form-control,
+.filter-card-simple .form-select {
+	border-radius: 50rem !important; /* Bo tròn 100% */
+	border: 0;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease-in-out;
+	font-weight: 500;
+}
+.filter-card-simple .form-control:focus,
+.filter-card-simple .form-select:focus,
+.filter-card-simple .input-group:focus-within {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 15px rgba(231, 60, 126, 0.3) !important;
+}
+
+/* Nút "Lọc" (Dùng style "GRADIENT" V13) */
+.filter-card-simple .btn-gradient {
+	background: linear-gradient(-45deg, #ee7752, #e73c7e);
+	background-size: 200% 200%;
+	border: 0;
+	color: #ffffff;
+	font-weight: 600;
+	transition: all 0.3s ease;
+	animation: pulse-danger 2s infinite;
+	border-radius: 50rem !important; /* Bo tròn */
+}
+.filter-card-simple .btn-gradient:hover {
+	color: #ffffff;
+	transform: scale(1.05) translateY(-2px);
+	box-shadow: 0 10px 20px rgba(231, 60, 126, 0.4);
+	background-position: 50% 50%;
+}
+.filter-card-simple .btn-outline-secondary {
+	border-radius: 50rem !important; /* Bo tròn */
+}
+
+
+/* ================================================================== */
+/* 4. THẺ SẢN PHẨM (product-card-simple) (Dùng style "GLOW" V13)
+/* ================================================================== */
+.product-card-simple {
+	border: 0;
+	border-radius: 1rem; /* Bo góc mạnh */
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+	transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	background: #ffffff;
+	overflow: hidden; /* Bắt buộc để bo góc ảnh */
+}
+.product-card-simple:hover {
+	transform: translateY(-12px);
+	box-shadow: 0 15px 35px rgba(231, 60, 126, 0.3); /* Glow hồng "cháy" */
+}
+
+/* Zoom ảnh khi hover */
+.product-card-simple:hover .card-img-top {
+	transform: scale(1.08);
+	transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ================================================================== */
+/* 5. (FIX V19) BADGE "LỎ" -> "PRO" (Theo ý bro 100%)
+/* ================================================================== */
+.product-card-simple .badge {
+	background-color: transparent !important; /* Nền trong suốt */
+	color: #212529 !important; /* Ép CHỮ ĐEN */
+	border: 1px solid rgba(0, 0, 0, 0.2) !important; /* Ép VIỀN ĐEN */
+	font-weight: 600 !important;
+}
+.product-card-simple .badge-shop-simple {
+	background-color: #fff0f5 !important; /* Nền hồng pastel */
+	color: #e73c7e !important; /* Chữ hồng "cháy" */
+	font-weight: 600 !important;
+	border: 0 !important;
+}
+
+/* ================================================================== */
+/* 6. GIÁ VÀ NÚT MUA (GIỐNG V13)
+/* ================================================================== */
+.product-card-simple .price-sale {
+	font-size: 1.1rem;
+	font-weight: 700;
+}
+.product-card-simple .price-normal {
+	font-size: 1.1rem;
+	font-weight: 700;
+	color: #0d6efd; /* Màu xanh primary */
+}
+
+/* Nút "Xem chi tiết" (Dùng style "btn-pink" V13) */
+.btn-buy-simple {
+	background-color: #e73c7e;
+	border-color: #e73c7e;
+	color: #ffffff;
+	font-weight: 600;
+	transition: all 0.3s ease;
+	border-radius: 50rem !important; /* Bo tròn */
+	
+	/* Ẩn nút đi lúc bình thường */
+	transform: translateY(200%);
+	opacity: 0;
+}
+.product-card-simple:hover .btn-buy-simple {
+	transform: translateY(0);
+	opacity: 1;
+}
+.btn-buy-simple:hover {
+	color: #ffffff;
+	background-color: #d63373;
+	transform: scale(1.05);
+}
+
+
+/* ================================================================== */
+/* 7. PHÂN TRANG (pagination-simple) (Dùng style "KÍNH MỜ" V13)
+/* ================================================================== */
+.pagination-simple .pagination {
+	background: rgba(255, 255, 255, 0.4);
+	backdrop-filter: blur(5px);
+	padding: 0.5rem;
+	border-radius: 50rem; /* Bo tròn 100% cái khung */
+	
+	--bs-pagination-bg: transparent;
+	--bs-pagination-border-width: 0;
+	--bs-pagination-color: #e73c7e;
+	--bs-pagination-font-weight: 600;
+	--bs-pagination-hover-color: #d63373;
+	--bs-pagination-hover-bg: rgba(255, 255, 255, 0.5);
+	
+	--bs-pagination-active-color: #fff;
+	--bs-pagination-active-bg: #e73c7e;
+	--bs-pagination-active-border-color: #e73c7e;
+}
+.pagination-simple .page-link {
+	border-radius: 50rem !important; 
+	margin: 0 2px;
+}
+.pagination-simple .page-item.active .page-link {
+	box-shadow: 0 5px 15px rgba(231, 60, 126, 0.4);
+	transform: scale(1.05) translateY(-2px);
+}
+
+/* ================================================================== */
+/* 8. KHÔNG CÓ KẾT QUẢ (empty-results-card-simple) (Dùng V13)
+/* ================================================================== */
+.empty-results-card-simple {
+	background: #fff0f5; 
+	border: 1px dashed #e73c7e;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	border-radius: 1rem;
+	padding: 3rem;
+}
+/*
+ * File: web2.css (PHẦN THÊM - FIX V21)
+ * Mục đích: SỬA TỈ LỆ KHUNG + HOVER NÚT + HEADER SHOP
+ */
+
+/* ================================================================== */
+/* 1. NỀN TRANG (ĂN THEO VENDOR)
+/* ================================================================== */
+/* Dùng :has() để "tóm" class "mồi" .product-list-simple */
+body:has(.product-list-simple) {
+	background: linear-gradient(
+		-45deg,
+		rgba(238, 119, 82, 0.15),
+		rgba(231, 60, 126, 0.15),
+		rgba(35, 166, 213, 0.15),
+		rgba(35, 213, 171, 0.15)
+	);
+	background-color: #f8f9fa; 
+	background-size: 400% 400%;
+	animation: gradient-animation 45s ease infinite;
+}
+
+/* ================================================================== */
+/* 2. TIÊU ĐỀ "SIÊU ĐẸP" (text-gradient)
+/* ================================================================== */
+.text-gradient {
+	background: linear-gradient( -45deg, #ee7752, #e73c7e, #23a6d5 );
+	background-size: 300% 300%;
+	animation: gradient-animation 10s ease infinite;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+}
+.letter-spacing-2 { letter-spacing: 2px; }
+
+
+/* ================================================================== */
+/* 3. (FIX V21) HEADER SHOP (WELCOME SHOP GIÀY THÀNH MAN)
+/* ================================================================== */
+.shop-header {
+    position: relative;
+    width: 100%;
+    height: 200px; /* Chiều cao cố định cho header */
+    border-radius: 1.5rem;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.shop-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Đảm bảo ảnh cover căng đều */
+    filter: brightness(0.7) blur(2px); /* Làm mờ và tối ảnh nền để text nổi bật */
+}
+
+.shop-header-content {
+    position: relative; /* Để logo và text nằm trên ảnh cover */
+    z-index: 1; /* Đảm bảo nội dung hiển thị trên ảnh cover */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #ffffff; /* Màu chữ trắng cho dễ nhìn */
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5); /* Đổ bóng chữ */
+}
+
+.shop-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%; /* Bo tròn logo */
+    border: 4px solid #ffffff; /* Viền trắng */
+    object-fit: contain; /* Đảm bảo logo hiển thị rõ */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Đổ bóng logo */
+    background-color: #ffffff; /* Nền trắng cho logo nếu ảnh trong suốt */
+}
+
+.shop-header .h3 {
+    color: #ffffff !important; /* Đảm bảo tiêu đề màu trắng */
+    font-size: 2rem; /* Tăng kích thước tiêu đề */
+    margin-top: 1rem !important;
+}
+
+
+/* ================================================================== */
+/* 4. BỘ LỌC (filter-card-simple) (Dùng style "KÍNH MỜ" V13)
+/* ================================================================== */
+.filter-card-simple {
+	background: rgba(255, 255, 255, 0.35);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 1.5rem; /* Bo góc "mạnh" */
+	padding: 1.5rem;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* "Nâng" các input trong bộ lọc */
+.filter-card-simple .form-control,
+.filter-card-simple .form-select {
+	border-radius: 50rem !important; /* Bo tròn 100% */
+	border: 0;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease-in-out;
+	font-weight: 500;
+}
+.filter-card-simple .form-control:focus,
+.filter-card-simple .form-select:focus,
+.filter-card-simple .input-group:focus-within {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+	border-color: #e73c7e !important;
+	box-shadow: 0 0 15px rgba(231, 60, 126, 0.3) !important;
+}
+
+/* Nút "Lọc" (Dùng style "GRADIENT" V13) */
+.filter-card-simple .btn-gradient {
+	background: linear-gradient(-45deg, #ee7752, #e73c7e);
+	background-size: 200% 200%;
+	border: 0;
+	color: #ffffff;
+	font-weight: 600;
+	transition: all 0.3s ease;
+	animation: pulse-danger 2s infinite;
+	border-radius: 50rem !important; /* Bo tròn */
+}
+.filter-card-simple .btn-gradient:hover {
+	color: #ffffff;
+	transform: scale(1.05) translateY(-2px);
+	box-shadow: 0 10px 20px rgba(231, 60, 126, 0.4);
+	background-position: 50% 50%;
+}
+.filter-card-simple .btn-outline-secondary {
+	border-radius: 50rem !important; /* Bo tròn */
+}
+
+
+/* ================================================================== */
+/* 5. (FIX V21) THẺ SẢN PHẨM (product-card-simple) - CẢ KHUNG DỌC 3:4
+/* ================================================================== */
+.product-card-simple {
+	border: 0;
+	border-radius: 1rem; /* Bo góc mạnh */
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+	transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	background: #ffffff;
+	overflow: hidden; /* Bắt buộc để bo góc ảnh */
+	
+	/* (FIX V21) Đặt tỉ lệ 3:4 cho CẢ KHUNG thẻ */
+    aspect-ratio: 3 / 4; 
+    display: flex;
+    flex-direction: column; /* Đảm bảo nội dung xếp dọc */
+}
+.product-card-simple:hover {
+	transform: translateY(-12px);
+	box-shadow: 0 15px 35px rgba(231, 60, 126, 0.3); /* Glow hồng "cháy" */
+}
+
+/* Ảnh thumbnail sản phẩm */
+.product-card-simple .card-img-top {
+    width: 100%;
+    /* (FIX V21) Đảm bảo ảnh thumbnail vẫn chiếm đủ chiều rộng */
+    height: auto; 
+    object-fit: cover;
+    /* Dùng max-height để ảnh không tràn ra khỏi tỉ lệ 3:4 của khung */
+    max-height: 70%; /* Ví dụ: ảnh chiếm 70% chiều cao của khung thẻ */
+    flex-shrink: 0; /* Ngăn ảnh co lại */
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Zoom ảnh khi hover */
+.product-card-simple:hover .card-img-top {
+	transform: scale(1.08);
+}
+
+/* ================================================================== */
+/* 6. BADGE "LỎ" -> "PRO" (Theo ý bro 100%)
+/* ================================================================== */
+.product-card-simple .badge {
+	background-color: transparent !important; /* Nền trong suốt */
+	color: #212529 !important; /* Ép CHỮ ĐEN */
+	border: 1px solid rgba(0, 0, 0, 0.2) !important; /* Ép VIỀN ĐEN */
+	font-weight: 600 !important;
+}
+.product-card-simple .badge-shop-simple {
+	background-color: #fff0f5 !important; /* Nền hồng pastel */
+	color: #e73c7e !important; /* Chữ hồng "cháy" */
+	font-weight: 600 !important;
+	border: 0 !important;
+}
+
+/* ================================================================== */
+/* 7. GIÁ VÀ NÚT MUA (GIỐNG V13)
+/* ================================================================== */
+.product-card-simple .price-sale {
+	font-size: 1.1rem;
+	font-weight: 700;
+}
+.product-card-simple .price-normal {
+	font-size: 1.1rem;
+	font-weight: 700;
+	color: #0d6efd; /* Màu xanh primary */
+}
+
+/* Nút "Xem chi tiết" (Dùng style "btn-pink" V13) */
+.btn-buy-simple {
+	background-color: #e73c7e;
+	border-color: #e73c7e;
+	color: #ffffff;
+	font-weight: 600;
+	transition: all 0.3s ease;
+	border-radius: 50rem !important; /* Bo tròn */
+	
+	/* Ẩn nút đi lúc bình thường */
+	transform: translateY(200%);
+	opacity: 0;
+}
+.product-card-simple:hover .btn-buy-simple {
+	transform: translateY(0);
+	opacity: 1;
+}
+
+/* (FIX V21) Đổi màu HOVER nút thành HỒNG PASTEL */
+.btn-buy-simple:hover {
+	background-color: #fff0f5 !important; /* Hồng pastel */
+	border-color: #e73c7e !important; /* Viền hồng đậm */
+	color: #e73c7e !important; /* Chữ hồng đậm */
+	transform: scale(1.05);
+}
+
+
+/* ================================================================== */
+/* 8. PHÂN TRANG (pagination-simple) (Dùng style "KÍNH MỜ" V13)
+/* ================================================================== */
+.pagination-simple .pagination {
+	background: rgba(255, 255, 255, 0.4);
+	backdrop-filter: blur(5px);
+	padding: 0.5rem;
+	border-radius: 50rem; /* Bo tròn 100% cái khung */
+	
+	--bs-pagination-bg: transparent;
+	--bs-pagination-border-width: 0;
+	--bs-pagination-color: #e73c7e;
+	--bs-pagination-font-weight: 600;
+	--bs-pagination-hover-color: #d63373;
+	--bs-pagination-hover-bg: rgba(255, 255, 255, 0.5);
+	
+	--bs-pagination-active-color: #fff;
+	--bs-pagination-active-bg: #e73c7e;
+	--bs-pagination-active-border-color: #e73c7e;
+}
+.pagination-simple .page-link {
+	border-radius: 50rem !important; 
+	margin: 0 2px;
+}
+.pagination-simple .page-item.active .page-link {
+	box-shadow: 0 5px 15px rgba(231, 60, 126, 0.4);
+	transform: scale(1.05) translateY(-2px);
+}
+
+/* ================================================================== */
+/* 9. KHÔNG CÓ KẾT QUẢ (empty-results-card-simple) (Dùng V13)
+/* ================================================================== */
+.empty-results-card-simple {
+	background: #fff0f5; 
+	border: 1px dashed #e73c7e;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+	border-radius: 1rem;
+	padding: 3rem;
+}
+
+
+/* ================================================================== */
+/* ANIMATIONS (TỪ V13)
+/* ================================================================== */
+@keyframes gradient-animation {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+@keyframes pulse-danger {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 60, 126, 0.4); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(231, 60, 126, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 60, 126, 0); }
+}
+
