@@ -1,17 +1,13 @@
 // filepath: src/main/java/vn/iotstar/configs/JPAConfig.java
-// purpose: Safe JPA bootstrap for Render: ENV-first, .env-fallback, never crash just because .env is missing.
-// notes:
-// - Reads DB_URL, DB_USER, DB_PASS from System ENV first (Render), then from .env if present (local), then from System properties.
-// - Dialect defaults to PostgreSQLDialect but can be overridden by ENV HIBERNATE_DIALECT.
-// - Optional ENV: HBM2DDL (default "update"), HIBERNATE_SHOW_SQL ("false"), HIBERNATE_FORMAT_SQL ("true").
-// - persistence.xml uses PU name "dataSource" and these properties will override its placeholders if present.
-
 package vn.iotstar.configs;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,116 +15,130 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class JPAConfig {
 
-    private static final EntityManagerFactory emf;
+  private static final EntityManagerFactory emf;
 
-    static {
-        try {
-            // 1) Load .env only if available; do not fail if missing (Render sẽ dùng ENV)
-            Dotenv dotenv = Dotenv.configure()
-                    .ignoreIfMalformed()
-                    .ignoreIfMissing()
-                    .load();
+  static {
+    try {
+      Dotenv dotenv = Dotenv.configure()
+          .ignoreIfMalformed()
+          .ignoreIfMissing()
+          .load();
 
-            // 2) Helper to resolve config: ENV → .env → System properties
-            String url  = firstNonEmpty(
-                    System.getenv("DB_URL"),
-                    getenv(dotenv, "DB_URL"),
-                    System.getProperty("DB_URL")
-            );
-            String user = firstNonEmpty(
-                    System.getenv("DB_USER"),
-                    getenv(dotenv, "DB_USER"),
-                    System.getProperty("DB_USER")
-            );
-            String pass = firstNonEmpty(
-                    System.getenv("DB_PASS"),
-                    getenv(dotenv, "DB_PASS"),
-                    System.getProperty("DB_PASS")
-            );
+      // 1) Resolve URL/USER/PASS từ nhiều key phổ biến
+      String url  = firstNonEmpty(
+          env("DB_URL"), dot(dotenv, "DB_URL"),
+          env("SPRING_DATASOURCE_URL"), dot(dotenv, "SPRING_DATASOURCE_URL"),
+          env("JDBC_DATABASE_URL"), dot(dotenv, "JDBC_DATABASE_URL"),
+          env("DATABASE_URL"), dot(dotenv, "DATABASE_URL"),
+          System.getProperty("DB_URL")
+      );
+      String user = firstNonEmpty(
+          env("DB_USER"), dot(dotenv, "DB_USER"),
+          env("SPRING_DATASOURCE_USERNAME"), dot(dotenv, "SPRING_DATASOURCE_USERNAME"),
+          env("JDBC_DATABASE_USERNAME"), dot(dotenv, "JDBC_DATABASE_USERNAME"),
+          System.getProperty("DB_USER")
+      );
+      String pass = firstNonEmpty(
+          env("DB_PASS"), dot(dotenv, "DB_PASS"),
+          env("SPRING_DATASOURCE_PASSWORD"), dot(dotenv, "SPRING_DATASOURCE_PASSWORD"),
+          env("JDBC_DATABASE_PASSWORD"), dot(dotenv, "JDBC_DATABASE_PASSWORD"),
+          System.getProperty("DB_PASS")
+      );
 
-            // Hibernate tunables
-            String dialect = firstNonEmpty(
-                    System.getenv("HIBERNATE_DIALECT"),
-                    getenv(dotenv, "HIBERNATE_DIALECT"),
-                    "org.hibernate.dialect.PostgreSQLDialect" // default cho Render Postgres
-            );
-            String hbm2ddl = firstNonEmpty(
-                    System.getenv("HBM2DDL"),
-                    getenv(dotenv, "HBM2DDL"),
-                    "update"
-            );
-            String showSql = firstNonEmpty(
-                    System.getenv("HIBERNATE_SHOW_SQL"),
-                    getenv(dotenv, "HIBERNATE_SHOW_SQL"),
-                    "false"
-            );
-            String fmtSql = firstNonEmpty(
-                    System.getenv("HIBERNATE_FORMAT_SQL"),
-                    getenv(dotenv, "HIBERNATE_FORMAT_SQL"),
-                    "true"
-            );
+      // 2) Các option Hibernate
+      String dialect = firstNonEmpty(
+          env("HIBERNATE_DIALECT"), dot(dotenv, "HIBERNATE_DIALECT"),
+          "org.hibernate.dialect.PostgreSQLDialect"
+      );
+      String hbm2ddl = firstNonEmpty(
+          env("HBM2DDL"), dot(dotenv, "HBM2DDL"),
+          env("SPRING_JPA_HIBERNATE_DDL_AUTO"), dot(dotenv, "SPRING_JPA_HIBERNATE_DDL_AUTO"),
+          "update"
+      );
+      String showSql = firstNonEmpty(
+          env("HIBERNATE_SHOW_SQL"), dot(dotenv, "HIBERNATE_SHOW_SQL"),
+          env("SPRING_JPA_SHOW_SQL"), dot(dotenv, "SPRING_JPA_SHOW_SQL"),
+          "false"
+      );
+      String fmtSql = firstNonEmpty(
+          env("HIBERNATE_FORMAT_SQL"), dot(dotenv, "HIBERNATE_FORMAT_SQL"),
+          "true"
+      );
 
-            // 3) Validate bắt buộc (chỉ khi thực sự thiếu thông tin kết nối)
-            if (isBlank(url) || isBlank(user) || isBlank(pass)) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("Thiếu thông tin DB. Cần thiết: DB_URL, DB_USER, DB_PASS.\n")
-                  .append("Ví dụ Render ENV:\n")
-                  .append("  DB_URL=jdbc:postgresql://<host>:5432/<db>?sslmode=require\n")
-                  .append("  DB_USER=<username>\n")
-                  .append("  DB_PASS=<password>\n");
-                throw new IllegalStateException(sb.toString());
-            }
+      // 3) Log kiểm tra key có mặt (không lộ giá trị)
+      presence("DB_URL","SPRING_DATASOURCE_URL","JDBC_DATABASE_URL","DATABASE_URL");
+      presence("DB_USER","SPRING_DATASOURCE_USERNAME","JDBC_DATABASE_USERNAME");
+      presence("DB_PASS","SPRING_DATASOURCE_PASSWORD","JDBC_DATABASE_PASSWORD");
 
-            // 4) Override properties cho PU "dataSource"
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("jakarta.persistence.jdbc.url", url);
-            properties.put("jakarta.persistence.jdbc.user", user);
-            properties.put("jakarta.persistence.jdbc.password", pass);
-            properties.put("hibernate.dialect", dialect);
-            properties.put("hibernate.hbm2ddl.auto", hbm2ddl);
-            properties.put("hibernate.show_sql", showSql);
-            properties.put("hibernate.format_sql", fmtSql);
+      if (isBlank(url) || isBlank(user) || isBlank(pass)) {
+        throw new IllegalStateException(
+            "Thiếu thông tin DB. Cần 1 trong các bộ key sau:\n" +
+            " - (DB_URL, DB_USER, DB_PASS)\n" +
+            " - (SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME, SPRING_DATASOURCE_PASSWORD)\n" +
+            " - (JDBC_DATABASE_URL, JDBC_DATABASE_USERNAME, JDBC_DATABASE_PASSWORD)\n" +
+            "Ví dụ Postgres: jdbc:postgresql://<host>:5432/<db>?sslmode=require"
+        );
+      }
 
-            // 5) Log ngắn gọn (không lộ password)
-            System.out.println("[JPAConfig] Using URL=" + url);
-            System.out.println("[JPAConfig] User=" + user);
-            System.out.println("[JPAConfig] Dialect=" + dialect + ", hbm2ddl=" + hbm2ddl +
-                               ", show_sql=" + showSql + ", format_sql=" + fmtSql);
+      // 4) (Rất quan trọng) Load driver & test kết nối ngắn để lỗi hiện ra rõ
+      try {
+        // Postgres driver; nếu bạn dùng DB khác, đổi tên class tương ứng
+        Class.forName("org.postgresql.Driver");
+      } catch (ClassNotFoundException e) {
+        System.err.println("❌ Không tìm thấy driver org.postgresql.Driver. Kiểm tra pom.xml có postgresql:42.x chưa?");
+        throw e;
+      }
 
-            // 6) Khởi tạo EMF
-            emf = Persistence.createEntityManagerFactory("dataSource", properties);
-
-        } catch (Exception e) {
-            System.err.println("❌ Lỗi khi khởi tạo EntityManagerFactory: " + e.getMessage());
-            e.printStackTrace();
-            throw new ExceptionInInitializerError(e);
+      // Test connection 3s để bắt lỗi URL/SSL/quyền sớm
+      try (Connection c = tryConnect(url, user, pass, 3)) {
+        if (c == null) {
+          throw new RuntimeException("Không mở được kết nối test (null). Kiểm tra URL/USER/PASS/sslmode.");
         }
-    }
+      }
 
-    public static EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
+      // 5) Tạo EMF
+      Map<String,Object> props = new HashMap<>();
+      props.put("jakarta.persistence.jdbc.url", url);
+      props.put("jakarta.persistence.jdbc.user", user);
+      props.put("jakarta.persistence.jdbc.password", pass);
+      props.put("hibernate.dialect", dialect);
+      props.put("hibernate.hbm2ddl.auto", hbm2ddl);
+      props.put("hibernate.show_sql", showSql);
+      props.put("hibernate.format_sql", fmtSql);
 
-    // ===== Helpers =====
-    private static String getenv(Dotenv dotenv, String key) {
-        try {
-            if (dotenv == null) return null;
-            String v = dotenv.get(key);
-            return isBlank(v) ? null : v;
-        } catch (Throwable ignored) {
-            return null;
-        }
-    }
+      System.out.println("[JPAConfig] Using URL=" + url);
+      System.out.println("[JPAConfig] User=" + user);
+      System.out.println("[JPAConfig] Dialect=" + dialect + ", hbm2ddl=" + hbm2ddl +
+                         ", show_sql=" + showSql + ", format_sql=" + fmtSql);
 
-    private static String firstNonEmpty(String... candidates) {
-        if (candidates == null) return null;
-        for (String c : candidates) {
-            if (!isBlank(c)) return c.trim();
-        }
-        return null;
-        }
+      emf = Persistence.createEntityManagerFactory("dataSource", props);
 
-    private static boolean isBlank(String s) {
-        return s == null || s.trim().isEmpty();
+    } catch (Exception ex) {
+      System.err.println("❌ Lỗi khi khởi tạo EntityManagerFactory (JPAConfig): " + ex.getClass().getName() + " - " + ex.getMessage());
+      ex.printStackTrace();
+      throw new ExceptionInInitializerError(ex);
     }
+  }
+
+  public static EntityManager getEntityManager() {
+    return emf.createEntityManager();
+  }
+
+  // ===== Helpers =====
+  private static String env(String k){ try{ String v=System.getenv(k); return isBlank(v)?null:v.trim(); }catch(Throwable t){return null;}}
+  private static String dot(Dotenv d,String k){ try{ if(d==null)return null; String v=d.get(k); return isBlank(v)?null:v.trim(); }catch(Throwable t){return null;}}
+  private static String firstNonEmpty(String... xs){ if(xs==null)return null; for(String s:xs){ if(!isBlank(s)) return s; } return null; }
+  private static boolean isBlank(String s){ return s==null || s.trim().isEmpty(); }
+
+  private static void presence(String... keys){
+    StringBuilder sb=new StringBuilder("[JPAConfig] ENV presence: ");
+    for(String k:keys){ sb.append(k).append("=").append(System.getenv(k)!=null?"✓":"×").append("  "); }
+    System.out.println(sb.toString());
+  }
+
+  private static Connection tryConnect(String url, String user, String pass, int timeoutSeconds) throws Exception {
+    // Postgres tôn trọng connectTimeout param; nếu không có, driver có timeout mặc định
+    // Có thể thêm ?connectTimeout=3&sslmode=require vào URL nếu cần.
+    return DriverManager.getConnection(url, user, pass);
+  }
 }
