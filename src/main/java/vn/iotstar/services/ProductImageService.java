@@ -1,4 +1,4 @@
-// src/main/java/vn/iotstar/services/ProductImageService.java
+// filepath: src/main/java/vn/iotstar/services/ProductImageService.java
 package vn.iotstar.services;
 
 import jakarta.persistence.*;
@@ -11,10 +11,12 @@ public class ProductImageService {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
+            // FIX 1: Dùng "Product_Image" (có quote)
+            // FIX 2: Dùng true/false thay vì 1/0 cho PostgreSQL
             em.createNativeQuery(
-                "INSERT INTO Product_Image(image_url, is_thumbnail, product_id) VALUES(?,?,?)")
+                "INSERT INTO \"Product_Image\"(image_url, is_thumbnail, product_id) VALUES(?,?,?)")
               .setParameter(1, imageUrl)
-              .setParameter(2, isThumbnail ? 1 : 0)
+              .setParameter(2, isThumbnail) // <- Gửi thẳng boolean
               .setParameter(3, productId)
               .executeUpdate();
             tx.commit();
@@ -31,7 +33,8 @@ public class ProductImageService {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.createNativeQuery("UPDATE Product_Image SET is_thumbnail = 0 WHERE product_id = ?")
+            // FIX 1: Dùng "Product_Image" (có quote)
+            em.createNativeQuery("UPDATE \"Product_Image\" SET is_thumbnail = false WHERE product_id = ?")
               .setParameter(1, productId)
               .executeUpdate();
             tx.commit();
@@ -47,9 +50,13 @@ public class ProductImageService {
     public String getThumbnailUrl(Long productId) {
         EntityManager em = JPAConfig.getEntityManager();
         try {
+            // FIX 1: Dùng "Product_Image" (có quote)
+            // FIX 2: Bỏ "TOP 1", dùng "LIMIT 1" ở cuối
+            // FIX 3: Dùng "is_thumbnail = true"
             return (String) em.createNativeQuery(
-                "SELECT TOP 1 image_url FROM Product_Image " +
-                "WHERE product_id = ? AND is_thumbnail = 1")
+                "SELECT image_url FROM \"Product_Image\" " +
+                "WHERE product_id = ? AND is_thumbnail = true " +
+                "LIMIT 1") // <- FIX 2
                 .setParameter(1, productId)
                 .getResultStream()
                 .findFirst()
