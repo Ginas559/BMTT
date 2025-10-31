@@ -1,4 +1,4 @@
-<%-- filepath: src/main/webapp/WEB-INF/views/products/list.jsp --%>
+<%-- filepath: src/main/webapp/WEB-INF/views/products/list.jsp (Optimized) --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
@@ -22,6 +22,7 @@
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
+<body>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 <%-- Lấy các tham số filter thuộc tính và tỉnh/thành từ request scope (Servlet đặt) hoặc param --%>
@@ -31,97 +32,16 @@
 <c:set var="province"
 	value="${empty province ? param.province : province}" />
 
-<div class="product-list-simple">
+<div class="product-list-simple container-fluid">
 
-	<%-- HERO SHOP (hiện khi lọc theo 1 shop cụ thể) --%>
+	<%-- HERO SHOP (hiện khi lọc theo 1 shop cụ thể) - Tối giản hóa logic URL --%>
 	<c:if test="${not empty shop}">
-		<c:set var="coverRaw"
-			value="${empty shop.coverUrl ? '' : shop.coverUrl}" />
-		<c:set var="logoRaw"
-			value="${empty shop.logoUrl  ? '' : shop.logoUrl }" />
-
-		<%-- resolve cover --%>
-		<c:choose>
-			<c:when
-				test="${fn:startsWith(coverRaw,'http://') or fn:startsWith(coverRaw,'https://')}">
-				<c:set var="resolvedCover" value="${coverRaw}" />
-			</c:when>
-			<c:when test="${fn:startsWith(coverRaw,'/assets/')}">
-				<c:set var="resolvedCover" value="${ctx.concat(coverRaw)}" />
-			</c:when>
-			<c:when test="${fn:startsWith(coverRaw,'/')}">
-				<c:set var="resolvedCover" value="${coverRaw}" />
-			</c:when>
-			<c:otherwise>
-				<c:set var="resolvedCover"
-					value="${ctx.concat('/assets/img/').concat(coverRaw)}" />
-			</c:otherwise>
-		</c:choose>
-
-		<%-- resolve logo --%>
-		<c:choose>
-			<c:when
-				test="${fn:startsWith(logoRaw,'http://') or fn:startsWith(logoRaw,'https://')}">
-				<c:set var="resolvedLogo" value="${logoRaw}" />
-			</c:when>
-			<c:when test="${fn:startsWith(logoRaw,'/assets/')}">
-				<c:set var="resolvedLogo" value="${ctx.concat(logoRaw)}" />
-			</c:when>
-			<c:when test="${fn:startsWith(logoRaw,'/')}">
-				<c:set var="resolvedLogo" value="${logoRaw}" />
-			</c:when>
-			<c:otherwise>
-				<c:set var="resolvedLogo"
-					value="${ctx.concat('/assets/img/').concat(logoRaw)}" />
-			</c:otherwise>
-		</c:choose>
-
-		<style>
-.shop-header {
-	position: relative;
-	border-radius: .75rem;
-	overflow: hidden;
-	background: #f8f9fa
-}
-
-.shop-cover {
-	width: 100%;
-	aspect-ratio: 16/5;
-	object-fit: cover;
-	opacity: .9;
-	display: block
-}
-
-.shop-header-content {
-	position: absolute;
-	inset: 0;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	background: linear-gradient(to bottom, rgba(0, 0, 0, .2),
-		rgba(0, 0, 0, .45));
-	text-align: center;
-	padding: 1rem
-}
-
-.shop-logo {
-	width: 88px;
-	height: 88px;
-	border-radius: 50%;
-	object-fit: cover;
-	border: 3px solid #fff;
-	background: #fff;
-	box-shadow: 0 2px 10px rgba(0, 0, 0, .25)
-}
-
-.shop-title {
-	margin-top: .75rem;
-	color: #fff;
-	letter-spacing: .08em;
-	text-shadow: 0 2px 8px rgba(0, 0, 0, .35)
-}
-</style>
+		<%-- Logic kiểm tra URL được tối giản, giả định các URL tương đối sẽ được ghép với ctx --%>
+		<c:set var="coverRaw" value="${empty shop.coverUrl ? '' : shop.coverUrl}" />
+		<c:set var="logoRaw" value="${empty shop.logoUrl  ? '' : shop.logoUrl }" />
+        
+        <c:set var="resolvedCover" value="${(fn:startsWith(coverRaw,'http:') or fn:startsWith(coverRaw,'https:')) ? coverRaw : (ctx.concat(coverRaw))}" />
+        <c:set var="resolvedLogo"  value="${(fn:startsWith(logoRaw,'http:') or fn:startsWith(logoRaw,'https:')) ? logoRaw : (ctx.concat(logoRaw))}" />
 
 		<div class="shop-header mb-4">
 			<img class="shop-cover"
@@ -141,7 +61,7 @@
 
 	
 
-	<%-- ĐÃ THÊM: class "filter-card-simple" (thay cho "lỏ") --%>
+	<%-- ĐÃ THÊM: class "filter-card-simple" --%>
 	<form class="row g-2 mb-3 filter-card-simple" method="get" action=""
 		id="filterForm">
 		<div class="col-12 col-md-4">
@@ -240,7 +160,7 @@
 		</div>
 
 		<div class="col-12 col-md-auto d-flex gap-2">
-			<%-- ĐÃ THÊM: class "btn-gradient" (từ v13) --%>
+			<%-- ĐÃ THÊM: class "btn-gradient" --%>
 			<button class="btn btn-gradient">Lọc</button>
 			<a class="btn btn-outline-secondary"
 				href="<c:url value='/products'/>">Xóa lọc</a>
@@ -254,41 +174,35 @@
 			<div class="row row-cols-2 row-cols-md-4 g-3">
 				<c:forEach var="p" items="${items}">
 					<div class="col">
-						<%-- 
-						  =============================================================
-						  (FIX V21) TỈ LỆ CẢ KHUNG SẢN PHẨM (DÀI 4 RỘNG 3)
-						  ĐÃ THÊM: class "product-card-simple"
-						  =============================================================
-						--%>
+						<%-- Product Card --%>
 						<div class="card h-100 product-card-simple">
 
-							<a href="${ctx}/product/${p.id}"> <%-- Resolve cover image robustly --%>
+							<a href="${ctx}/product/${p.id}"> 
+								<%-- Resolve cover image robustly - Tối ưu hóa logic URL --%>
 								<c:set var="coverRaw"
-									value="${empty p.coverUrl ? '' : p.coverUrl}" /> <%-- Sửa nhầm thư mục /assset -> /assets --%>
+									value="${empty p.coverUrl ? '' : p.coverUrl}" />
 								<c:set var="coverFixed"
-									value="${fn:replace(coverRaw, '/assset/', '/assets/')}" /> <c:choose>
-									<%-- URL tuyệt đối http/https: giữ nguyên --%>
-									<c:when
-										test="${fn:startsWith(coverFixed,'http://') or fn:startsWith(coverFixed,'https://')}">
-										<c:set var="resolvedCover" value="${coverFixed}" />
-									</c:when>
+									value="${fn:replace(coverRaw, '/assset/', '/assets/')}" />
+                                
+								<c:set var="isAbsolute" 
+                                    value="${fn:startsWith(coverFixed,'http:') or fn:startsWith(coverFixed,'https:')}" />
+                                <c:set var="isAsset" 
+                                    value="${fn:startsWith(coverFixed,'/assets/')}" />
 
-									<%-- Đường dẫn bắt đầu bằng /assets/... : tự ghép ctx --%>
-									<c:when test="${fn:startsWith(coverFixed,'/assets/')}">
-										<c:set var="resolvedCover" value="${ctx.concat(coverFixed)}" />
-									</c:when>
-
-									<%-- Đường dẫn bắt đầu bằng / (nhưng không phải /assets): dùng nguyên như đã lưu --%>
-									<c:when test="${fn:startsWith(coverFixed,'/')}">
-										<c:set var="resolvedCover" value="${coverFixed}" />
-									</c:when>
-
-									<%-- Chỉ là tên file: trỏ về /assets/products/ --%>
-									<c:otherwise>
-										<c:set var="resolvedCover"
-											value="${ctx.concat('/assets/products/').concat(coverFixed)}" />
-									</c:otherwise>
-								</c:choose> <%-- (FIX V21) ĐÃ XÓA style="aspect-ratio: 3 / 4;" vì sẽ set cho cả card --%>
+                                <c:set var="resolvedCover">
+                                    <c:choose>
+                                        <c:when test="${isAbsolute}">
+                                            <c:out value="${coverFixed}" />
+                                        </c:when>
+                                        <c:when test="${isAsset}">
+                                            <c:out value="${ctx.concat(coverFixed)}" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:out value="${ctx.concat('/assets/products/').concat(coverFixed)}" />
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:set>
+								
 								<img class="card-img-top"
 								src="${empty resolvedCover ? (ctx.concat('/assets/img/placeholder.png')) : resolvedCover}"
 								alt="${p.name}"
@@ -301,7 +215,6 @@
 								<div class="fw-semibold text-truncate mb-1" title="${p.name}">${p.name}</div>
 
 								<div class="d-flex flex-wrap gap-1 small mb-1">
-									<%-- CSS V19 sẽ "tóm" mấy cái badge này --%>
 									<c:if test="${not empty p.brand}">
 										<span class="badge bg-light border text-secondary">Brand:
 											${p.brand}</span>
@@ -329,7 +242,6 @@
 												width="18" height="18" class="rounded"
 												onerror="this.onerror=null;this.src='${ctx}/assets/img/placeholder.png';">
 										</c:if>
-										<%-- ĐÃ THÊM: class "badge-shop-simple" --%>
 										<a
 											class="badge text-secondary text-decoration-none badge-shop-simple"
 											href="<c:url value='/products'>
@@ -357,7 +269,6 @@
 									<div class="fw-bold">
 										<c:choose>
 											<c:when test="${not empty p.discountPrice}">
-												<%-- ĐÃ THÊM: class "price-sale" --%>
 												<span class="text-danger price-sale"> <fmt:formatNumber
 														value="${p.discountPrice}" type="number"
 														groupingUsed="true" /> ₫
@@ -370,7 +281,6 @@
 												</c:if>
 											</c:when>
 											<c:when test="${not empty p.price}">
-												<%-- ĐÃ THÊM: class "price-normal" --%>
 												<span class="price-normal"> <fmt:formatNumber
 														value="${p.price}" type="number" groupingUsed="true" /> ₫
 												</span>
@@ -382,7 +292,6 @@
 									<span class="small"> <c:set var="rAvg"
 											value="${empty p.ratingAvg ? 0 : p.ratingAvg}" /> <c:forEach
 											var="i" begin="1" end="5">
-											<%-- ĐÃ THÊM: Dùng icon "Pro" (từ v13) --%>
 											<c:choose>
 												<c:when test="${i <= rAvg}">
 													<span class="text-warning"><i
@@ -397,7 +306,6 @@
 									</span>
 								</div>
 
-								<%-- ĐÃ THÊM: class "btn-buy-simple" (thay cho outline) --%>
 								<a href="${ctx}/product/${p.id}"
 									class="btn btn-buy-simple btn-sm mt-auto">Xem chi tiết</a>
 							</div>
@@ -407,7 +315,6 @@
 			</div>
 
 			<c:if test="${page.totalPages > 1}">
-				<%-- ĐÃ THÊM: class "pagination-simple" --%>
 				<nav class="mt-3 pagination-simple">
 					<ul class="pagination justify-content-center">
 
@@ -483,7 +390,6 @@
 		</c:when>
 
 		<c:otherwise>
-			<%-- ĐÃ THÊM: class "empty-results-card-simple" --%>
 			<div class="text-center text-muted py-5 empty-results-card-simple">Chưa
 				có sản phẩm để hiển thị.</div>
 		</c:otherwise>
@@ -550,3 +456,5 @@
 		sync();
 	})();
 </script>
+</body>
+</html>
